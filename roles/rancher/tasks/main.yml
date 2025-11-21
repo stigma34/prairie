@@ -1,0 +1,53 @@
+---
+- name: Update the OS
+  dnf:
+    name: "*"
+    state: latest
+
+- name: Install necessary packages
+  dnf:
+    name:
+      - nano
+      - wget
+      - git
+    state: latest
+
+- name: Build and configure swap
+  include_tasks: swap.yml
+
+- name: Download and install k3s
+  include_tasks: k3s.yml
+
+- name: Download and install Helm 4
+  include_tasks: helm/install.yml
+
+- name: Check if {{ cattle_namespace }} namespace exists
+  command: kubectl get namespace {{ cattle_namespace }}
+  register: cattle_ns
+  failed_when: false
+  changed_when: false
+
+- name: Create {{ cattle_namespace}} namespace
+  command: kubectl create namespace {{ cattle_namespace }}
+  when: cattle_ns.rc != 0
+
+- name: Apply cert-manager manifest
+  command: kubectl apply -f {{ cert_manager_url }}
+  register: certmgr_apply
+  chagned_when: >
+    'configured' in certmgr_apply.stdout or
+    'created' in certmgr_apply.stdout
+
+- name: Add jetstack helm repo
+  include_tasks: helm/repos.yml
+  tags:
+    - jetstack
+
+- name: Update helm repo
+  command: helm repo update
+
+- name: Bring in helm charts and build
+  include_tasks: helm/build.yml
+  tags:
+    - cert-manager
+    - rancher-install

@@ -1,0 +1,11 @@
+---
+k3s_url: https://get.k3s.io
+helm_url: https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-4
+rancher_latest_url: https://releases.rancher.com/server-charts/latest
+cert_manager_url: https://github.com/cert-manager/cert-manager/releases/download/v1.19.1/cert-manager.crds.yaml
+jetstack_url: https://charts.jetstack.io
+
+cattle_namespace: cattle-system
+
+hostname: "{{ vault_hostname }}"
+bootstrap_password: "{{ vault_bootstrap_password }}"

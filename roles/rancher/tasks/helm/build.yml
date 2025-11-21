@@ -1,0 +1,18 @@
+---
+- name: Install cert-manager
+  command: >
+    helm upgrade --install cert-manager jetstack/cert-manager
+    --namespace cert-manager
+    --create-namespace
+  tags:
+    - cert-manager
+
+- name: Install rancher
+  command: >
+    helm upgrade --install rancher rancher-latest/rancher
+    --namespace {{ cattle_namespace }}
+    --set hostname={{ vault_hostname }}
+    --set replicas=1
+    --set bootstrapPassword={{ bootstrap_password }}
+  tags:
+    - rancher-install

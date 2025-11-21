@@ -1,0 +1,6 @@
+- name: Provision k3s single node with Rancher
+  hosts: cattle
+  become: true
+  become_user: root
+  roles:
+    - rancher

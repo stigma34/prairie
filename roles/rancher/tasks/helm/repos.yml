@@ -1,0 +1,10 @@
+---
+- name: Add rancher-latest helm repo
+  command: helm repo add rancher-latest {{ rancher_latest_url }} --force-update
+  tags:
+    - rancher-latest
+
+- name: Add jetstack helm repo
+  command: helm repo add jetstack {{ jetstack_url }} --force-update
+  tags:
+    - jetstack
