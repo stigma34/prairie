@@ -4,8 +4,21 @@ set -euo pipefail
 # This script is expected to live at: prairie/tools/ansible_init.sh
 # and be run from the repo root as: ./prairie/tools/ansible_init.sh
 
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT_DIR="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+
+# Walk up until we find ansible.cfg – that directory is our repo root
+ROOT_DIR="${SCRIPT_DIR}"
+while [[ "${ROOT_DIR}" != "/" && ! -f "${ROOT_DIR}/ansible.cfg" ]]; do
+  ROOT_DIR="$(dirname "${ROOT_DIR}")"
+done
+
+if [[ ! -f "${ROOT_DIR}/ansible.cfg" ]]; then
+  echo "[prairie-init] ERROR: Could not find ansible.cfg above ${SCRIPT_DIR}" >&2
+  exit 1
+fi
+
+echo "[prairie-init] Using repo root: ${ROOT_DIR}"
 
 VAULT_KEY="${ROOT_DIR}/.vault.key"
 VAULT_DIR="${ROOT_DIR}/prairie/group_vars/cattle"
@@ -38,8 +51,6 @@ echo ""
 echo "[+] Version check:"
 ansible --version
 
-echo "[prairie-init] Using repo root: ${ROOT_DIR}"
-
 echo "[+] Ensure group_vars/cattle directory exists"
 echo "[prairie-init] Ensuring vault directory exists: ${VAULT_DIR}"
 mkdir -p "${VAULT_DIR}"
@@ -57,7 +68,7 @@ fi
 
 echo "[+] Create .vault.key if it doesn't exist"
 if [[ ! -f "${VAULT_KEY}" ]]; then
-  echo "[prairie-init] Generating .vault.key"
+  echo "[prairie-init] Generating .vault.key at ${VAULT_KEY}"
   openssl rand -base64 32 > "${VAULT_KEY}"
   chmod 600 "${VAULT_KEY}"
 else
@@ -70,11 +81,9 @@ if grep -q '^\$ANSIBLE_VAULT;' "${VAULT_FILE}"; then
 else
   echo "[prairie-init] Encrypting vault.yml with vault-id 'default'"
   ansible-vault encrypt \
-    --encrypt-vault-id default@"${VAULT_KEY}" \
+    --vault-id default@"${VAULT_KEY}" \
     "${VAULT_FILE}"
 fi
 
 echo "[prairie-init] Done."
-echo "[prairie-init] Remember to keep .vault.key out of version control. (Already in .gitignore)"
-
-
+echo "[prairie-init] Remember to keep .vault.key out of version control. (Already set in .gitignore)"
