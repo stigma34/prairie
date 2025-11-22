@@ -12,6 +12,32 @@ and this project aims to follow [Semantic Versioning](https://semver.org/spec/v2
 
 ---
 
+## v0.1.2 – Rancher bring-up + firewall rollback
+
+**Status:** Stable for fresh installs (single-node K3s + Rancher)
+
+### Fixed
+
+- **Cert-manager installation path repaired**
+  - Reinstated Helm-based deployment of `jetstack/cert-manager` with CRDs applied via the official `cert-manager.crds.yaml` manifest.
+  - Added explicit waiting for cert-manager CRDs and pods before proceeding with Rancher install to avoid race conditions during bootstrap.
+
+- **Rancher TLS secret alignment**
+  - Switched Rancher’s Helm configuration to `ingress.tls.source=rancher` so the chart manages the `tls-rancher-ingress` secret.
+  - Ensured the Rancher ingress correctly terminates TLS for `your.domain.tld` using the generated secret.
+
+### Changed
+
+- **Host firewall management disabled by default**
+  - Removed automatic installation and configuration of `firewalld` from the base role.
+  - Introduced `prairie_manage_firewall` toggle and set the default to `false` to avoid conflicts with K3s / Traefik / LoadBalancer networking.
+  - For now, Prairie assumes that perimeter firewalls / security groups are handling ingress control to the node.
+
+### Known issues
+
+- Prairie currently does **not** harden the host firewall. If you need strict host-level rules, you’ll have to manage them outside of Prairie for now (or risk breaking the K3s `traefik` LoadBalancer path).
+
+
 ## [0.1.1] - 2025-11-22
 
 ### Added
