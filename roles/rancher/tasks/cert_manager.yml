@@ -15,7 +15,7 @@
 - name: Deploy or upgrade cert-manager
   kubernetes.core.helm:
     name: cert-manager
-    chart_ref: "{{ cert_manager_helm_repo_name }}/cert-manager"
+    chart_ref: "{{ jetstack_helm_repo_name }}/cert-manager"
     chart_version: "{{ cert_manager_chart_version | default(omit) }}"
     release_namespace: "{{ cert_manager_namespace }}"
     create_namespace: true
