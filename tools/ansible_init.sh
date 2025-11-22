@@ -1,5 +1,15 @@
 #!/usr/bin/env bash
-set -e
+set -euo pipefail
+
+# This script is expected to live at: prairie/tools/ansible_init.sh
+# and be run from the repo root as: ./prairie/tools/ansible_init.sh
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT_DIR="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+
+VAULT_KEY="${ROOT_DIR}/.vault.key"
+VAULT_DIR="${ROOT_DIR}/prairie/group_vars/cattle"
+VAULT_FILE="${VAULT_DIR}/vault.yml"
 
 echo "[+] Updating system packages..."
 dnf -y update
@@ -27,4 +37,44 @@ echo "     deactivate"
 echo ""
 echo "[+] Version check:"
 ansible --version
+
+echo "[prairie-init] Using repo root: ${ROOT_DIR}"
+
+echo "[+] Ensure group_vars/cattle directory exists"
+echo "[prairie-init] Ensuring vault directory exists: ${VAULT_DIR}"
+mkdir -p "${VAULT_DIR}"
+
+echo "[+] Create vault.yml with defaults if it doesn't exist yet"
+if [[ ! -f "${VAULT_FILE}" ]]; then
+  echo "[prairie-init] Creating initial vault.yml at ${VAULT_FILE}"
+  cat > "${VAULT_FILE}" << 'EOF'
+vault_hostname: your.hostname.tld
+vault_bootstrap_password: "SuperSecret123!"
+EOF
+else
+  echo "[prairie-init] vault.yml already exists, not overwriting."
+fi
+
+echo "[+] Create .vault.key if it doesn't exist"
+if [[ ! -f "${VAULT_KEY}" ]]; then
+  echo "[prairie-init] Generating .vault.key"
+  openssl rand -base64 32 > "${VAULT_KEY}"
+  chmod 600 "${VAULT_KEY}"
+else
+  echo "[prairie-init] .vault.key already exists, leaving as-is."
+fi
+
+echo "[+] Encrypt vault.yml with vault-id 'default' if not already encrypted"
+if grep -q '^\$ANSIBLE_VAULT;' "${VAULT_FILE}"; then
+  echo "[prairie-init] vault.yml is already encrypted. Skipping encryption."
+else
+  echo "[prairie-init] Encrypting vault.yml with vault-id 'default'"
+  ansible-vault encrypt \
+    --encrypt-vault-id default@"${VAULT_KEY}" \
+    "${VAULT_FILE}"
+fi
+
+echo "[prairie-init] Done."
+echo "[prairie-init] Remember to keep .vault.key out of version control. (Already in .gitignore)"
+
 
