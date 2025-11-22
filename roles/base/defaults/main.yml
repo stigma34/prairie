@@ -3,20 +3,18 @@ prairie_base_packages:
   RedHat:
     - curl
     - wget
-    - firewalld
     - kernel-modules-extra
     - tar
   Debian:
     - curl
     - wget
-    - ufw
     - tar
 
 prairie_supported_families:
   - RedHat
   - Debian
 
-prairie_manage_firewall: true
+prairie_manage_firewall: false
 
 prairie_swap_size: "2G"
 prairie_swappiness: "10"
