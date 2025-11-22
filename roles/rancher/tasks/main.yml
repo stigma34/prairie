@@ -10,7 +10,11 @@
       - nano
       - wget
       - tar
+      - kernel-modules-extra
     state: latest
+
+- name: Enable br_netfilter
+  command: modprobe br_netfilter
 
 - name: Build and configure swap
   include_tasks: swap.yml
