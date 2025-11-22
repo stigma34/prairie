@@ -24,8 +24,9 @@
   <!-- DigitalOcean -->
   <img src="https://img.shields.io/badge/DigitalOcean-Supported-006aff?style=for-the-badge&logo=digitalocean&logoColor=white" />
 
-  <!-- License (MIT assumed, tweak as needed) -->
-  <img src="https://img.shields.io/badge/License-MIT-555?style=for-the-badge" />
+  <!-- License -->
+<img src="https://img.shields.io/badge/License-Apache--2.0-555?style=for-the-badge" />
+
 
 </p>
 
