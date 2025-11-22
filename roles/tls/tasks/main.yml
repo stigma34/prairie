@@ -1,0 +1,79 @@
+---
+- name: Skip TLS configuration unless tls_enabled is true
+  debug:
+    msg: "TLS role disabled (set tls_enabled: true to manage cert-manager issuers and certificates)."
+  when: not tls_enabled
+  tags: [tls]
+  # Bail out early
+  changed_when: false
+
+- name: Ensure TLS namespace exists
+  command: kubectl get namespace {{ tls_namespace }}
+  register: tls_ns
+  failed_when: false
+  changed_when: false
+  when: tls_enabled
+
+- name: Create TLS namespace if missing
+  command: kubectl create namespace {{ tls_namespace }}
+  when:
+    - tls_enabled
+    - tls_ns.rc != 0
+
+# ---------------------------------------------------------------------
+# Issuer selection
+# ---------------------------------------------------------------------
+
+- name: Render Let’s Encrypt ClusterIssuer manifest
+  template:
+    src: clusterissuer-letsencrypt-http01.yaml.j2
+    dest: /tmp/prairie-clusterissuer.yaml
+  when:
+    - tls_enabled
+    - tls_issuer_mode == "lets-encrypt"
+
+- name: Apply Let’s Encrypt ClusterIssuer
+  command: kubectl apply -f /tmp/prairie-clusterissuer.yaml
+  when:
+    - tls_enabled
+    - tls_issuer_mode == "lets-encrypt"
+
+- name: Render self-signed ClusterIssuer manifest
+  template:
+    src: clusterissuer-selfsigned.yaml.j2
+    dest: /tmp/prairie-selfsigned-clusterissuer.yaml
+  when:
+    - tls_enabled
+    - tls_issuer_mode == "self-signed"
+
+- name: Apply self-signed ClusterIssuer
+  command: kubectl apply -f /tmp/prairie-selfsigned-clusterissuer.yaml
+  when:
+    - tls_enabled
+    - tls_issuer_mode == "self-signed"
+
+# ---------------------------------------------------------------------
+# Rancher Certificate bound to the chosen ClusterIssuer
+# ---------------------------------------------------------------------
+
+- name: Render Rancher Certificate manifest
+  template:
+    src: rancher-certificate.yaml.j2
+    dest: /tmp/prairie-rancher-certificate.yaml
+  when: tls_enabled
+
+- name: Apply Rancher Certificate
+  command: kubectl apply -f /tmp/prairie-rancher-certificate.yaml
+  when: tls_enabled
+
+- name: Wait for Rancher Certificate to be Ready
+  command: >
+    kubectl -n {{ tls_namespace }}
+    get certificate rancher-tls
+    -o jsonpath='{.status.conditions[?(@.type=="Ready")].status}'
+  register: rancher_cert_ready
+  changed_when: false
+  retries: 30
+  delay: 10
+  until: rancher_cert_ready.stdout == "True"
+  when: tls_enabled
