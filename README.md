@@ -3,12 +3,7 @@
 
 ![Prairie Logo](assets/prairie.png)
 
-![Status](https://img.shields.io/badge/status-broken-red?style=for-the-badge)
-
-> 🚧 **I broke this shit.**  
-> `main` is currently not stable for fresh installs while I debug a cert-manager / Rancher / Traefik issue.  
-> Give me a few hours before you try this in anger.
-
+![Build Status](https://img.shields.io/badge/build-stable-brightgreen?style=for-the-badge)
 
 ### Important information
 

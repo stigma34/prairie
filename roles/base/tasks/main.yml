@@ -52,6 +52,7 @@
     state: present
   when:
     - ansible_os_family == "Debian"
+    - prairie_manage_firewall
 
 - name: Check if br_netfilter module is present
   stat:

@@ -1,3 +1,40 @@
+# Prairie Release Notes – v0.1.2  
+**Release Date:** 2025-11-22
+
+### Summary
+
+This release fixes a regression in `v0.1.1` where fresh installs would bring K3s and Rancher up, but fail with `502 Bad Gateway` at the Rancher endpoint. Root cause ended up being a combination of:
+
+- cert-manager install path changes
+- Rancher ingress TLS configuration
+- host firewall rules interfering with Traefik / LoadBalancer traffic
+
+`v0.1.2` gets us back to a clean, reproducible “from bare OS to working Rancher UI” path.
+
+### What changed
+
+- Repaired cert-manager installation:
+  - Apply CRDs via `cert-manager.crds.yaml`
+  - Install `jetstack/cert-manager` via Helm
+  - Wait for CRDs + pods before touching Rancher
+
+- Simplified Rancher TLS:
+  - Use `ingress.tls.source=rancher` so the chart manages the `tls-rancher-ingress` secret directly
+  - Ingress is now correctly wired to the Rancher service on port 80 with working HTTPS termination
+
+- Disabled host firewall management:
+  - Removed automatic `firewalld` install/config from the base role
+  - Added `prairie_manage_firewall` flag (default: `false`)
+  - Avoids host-level firewall rules breaking Traefik / K3s `LoadBalancer` behavior
+
+### Notes
+
+- If you were relying on Prairie to manage host firewall rules, that behavior is currently disabled. Use your existing perimeter firewall / security groups, or manage host firewall state manually until a more K3s-aware firewall role is added back.
+- If you see `Bad Gateway` again, the quickest sanity checks are:
+  - `kubectl get pods -A`
+  - `kubectl get ingress -A`
+  - `kubectl port-forward -n cattle-system svc/rancher 8443:443` and hit `https://localhost:8443` to confirm Rancher itself is healthy.
+
 # Prairie Release Notes – v0.1.1  
 **Release Date:** 2025-11-22
 
