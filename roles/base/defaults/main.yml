@@ -1,0 +1,13 @@
+---
+prairie_base_packages:
+  RedHat:
+    - curl
+    - wget
+    - firewalld
+    - kernel-modules-extra
+    - tar
+  Debian:
+    - curl
+    - wget
+    - ufw
+    - tar

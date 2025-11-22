@@ -1,7 +1,35 @@
 ---
-# Prairie base role
-# OS prep, packages, firewalld/ufw, sysctl, etc. will live here.
+# Prairie base role: OS prep, packages, firewall, etc.
 
-- name: Placeholder base task
-  debug:
-    msg: "Prairie base role: OS prep goes here."
+- name: Install base packages
+  package:
+    name: "{{ prairie_base_packages[ansible_os_family] | default([]) }}"
+    state: present
+
+- name: Enable and start firewall service where applicable
+  service:
+    name: "{{ 'firewalld' if ansible_os_family == 'RedHat' else 'ufw' }}"
+    state: started
+    enabled: true
+  when: ansible_os_family in ['RedHat', 'Debian']
+
+- name: Check if br_netfilter module is present
+  stat:
+    path: /sys/module/br_netfilter
+  register: brnet
+
+- name: Ensure br_netfilter loads at boot
+  copy:
+    dest: /etc/modules-load.d/br_netfilter.conf
+    content: "br_netfilter\n"
+    owner: root
+    group: root
+    mode: '0644'
+  when: not brnet.stat.exists
+
+- name: Enable br_netfilter if not already loaded
+  command: modprobe br_netfilter
+  when: not brnet.stat.exists
+
+- name: Build and configure swap
+  include_tasks: swap.yml
