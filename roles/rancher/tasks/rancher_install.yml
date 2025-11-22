@@ -1,12 +1,12 @@
 ---
-- name: Check if {{ cattle_namespace }} namespace exists
-  command: kubectl get namespace {{ cattle_namespace }}
+- name: Check if {{ rancher_namespace }} namespace exists
+  command: kubectl get namespace {{ rancher_namespace }}
   register: cattle_ns
   failed_when: false
   changed_when: false
 
-- name: Create {{ cattle_namespace}} namespace
-  command: kubectl create namespace {{ cattle_namespace }}
+- name: Create {{ rancher_namespace}} namespace
+  command: kubectl create namespace {{ rancher_namespace }}
   when: cattle_ns.rc != 0
 
 - name: Deploy or upgrade Rancher
