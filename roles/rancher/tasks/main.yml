@@ -10,6 +10,7 @@
       - nano
       - wget
       - git
+      - tar
     state: latest
 
 - name: Build and configure swap
@@ -34,7 +35,7 @@
 - name: Apply cert-manager manifest
   command: kubectl apply -f {{ cert_manager_url }}
   register: certmgr_apply
-  chagned_when: >
+  changed_when: >
     'configured' in certmgr_apply.stdout or
     'created' in certmgr_apply.stdout
 

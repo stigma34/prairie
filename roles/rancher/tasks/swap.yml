@@ -17,14 +17,15 @@
   command: mkswap /swapfile
   when: not swapfile_stat.stat.exists
 
+- name: Check if /swapfile is already active
+  command: grep -q '^/swapfile' /proc/swaps
+  register: swap_active
+  failed_when: false
+  changed_when: false
+
 - name: Enable /swapfile
   command: swapon /swapfile
-  failed_when: >
-    swapon_result.rc != 0 and
-    'is already in use' not in swapon.result.stderr
-  changed_when: >
-    swapon_result.rc == 0 and
-    'is already in use' not in swapon_result.stderr
+  when: swap_active.rc != 0
 
 - name: Add /swapfile to /etc/fstab
   mount:
