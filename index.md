@@ -76,3 +76,4 @@ prairie/
 ├── seed_rancher.yml         # Main playbook (entrypoint)
 └── tools/
     └── ansible_init.sh      # Vault/secret bootstrap script
+```
