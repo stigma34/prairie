@@ -1,0 +1,22 @@
+---
+- name: Check if {{ cattle_namespace }} namespace exists
+  command: kubectl get namespace {{ cattle_namespace }}
+  register: cattle_ns
+  failed_when: false
+  changed_when: false
+
+- name: Create {{ cattle_namespace}} namespace
+  command: kubectl create namespace {{ cattle_namespace }}
+  when: cattle_ns.rc != 0
+
+- name: Install rancher
+  command: >
+    helm upgrade --install rancher rancher-latest/rancher
+    --namespace {{ cattle_namespace }}
+    --set hostname={{ vault_hostname }}
+    --set replicas=1
+    --set bootstrapPassword={{ bootstrap_password }}
+  tags:
+    - rancher-install
+  no_log: true
+  

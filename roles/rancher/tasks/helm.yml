@@ -1,4 +1,13 @@
 ---
+- name: Download latest Helm 4
+  get_url:
+    url: "{{ helm_url }}"
+    dest: /opt/get_helm.sh
+    mode: '0755'
+  
+- name: Install Helm 4
+  command: /opt/get_helm.sh
+
 - name: Add rancher-latest helm repo
   command: helm repo add rancher-latest {{ rancher_latest_url }} --force-update
   tags:
@@ -8,3 +17,6 @@
   command: helm repo add jetstack {{ jetstack_url }} --force-update
   tags:
     - jetstack
+
+- name: Update helm repo
+  command: helm repo update

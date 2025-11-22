@@ -1,0 +1,22 @@
+---
+- name: Wait for Rancher deployment to be Available
+  command: >
+    kubectl -n {{ cattle_namespace }} get deploy rancher -o jsonpath={.status.availableReplicas}
+  register: rancher_available
+  changed_when: false
+  retries: 40
+  delay: 6
+  until:
+    - rancher_available.rc == 0
+    - rancher_available.stdout != ""
+    - rancher_available.stdout | int >= 1
+  tags:
+    - rancher-install
+
+- name: Display Rancher URL
+  debug:
+    msg:
+      - "========================================="
+      - "  Rancher UI is ready!"
+      - "  URL: https://{{ vault_hostname }}/"
+      - "========================================="

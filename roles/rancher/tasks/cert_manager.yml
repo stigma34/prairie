@@ -1,0 +1,35 @@
+- name: Apply cert-manager manifest
+  command: kubectl apply -f {{ cert_manager_url }}
+  register: certmgr_apply
+  changed_when: >
+    'configured' in certmgr_apply.stdout or
+    'created' in certmgr_apply.stdout
+
+- name: Wait for cert-manager CRDs to be Established
+  command: >
+    kubectl wait --for=condition=Established --timeout=240s crd
+    -l app.kubernetes.io/name=cert-manager
+  register: certmgr_crd_wait
+  changed_when: false
+
+- name: Install cert-manager
+  command: >
+    helm upgrade --install cert-manager jetstack/cert-manager
+    --namespace cert-manager
+    --create-namespace
+  tags:
+    - cert-manager
+
+- name: Wait for cert-manager pods to be Ready
+  command: >
+    kubectl -n cert-manager get pods --no-headers
+  register: certmgr_pods
+  changed_when: false
+  retries: 30
+  delay: 6
+  until:
+    - certmgr_pods.rc == 0
+    - certmgr_pods.stdout != ""
+    - certmgr_pods.stdout is search("Running")
+  tags:
+    - cert-manager
