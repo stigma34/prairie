@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="prairie.css">
+
 # Prairie
 
 Prairie is a lightweight Ansible-driven deployer for standing up a fully functional Rancher environment on Rocky Linux 10.
