@@ -1,28 +1,26 @@
 /* --- Fix for GitHub code highlighter overriding our theme --- */
 
+/* Base: force everything inside code to follow our colors */
 .markdown-body pre code *,
 .markdown-body code * {
   color: inherit !important;
-  background: #0b0f0c !important;
+  background: transparent !important;
 }
 
-/* Force foreground text inside code blocks */
-.markdown-body pre code {
-  color: #d3eed8 !important;  /* pleasant pale green */
-}
-
-/* Force tree-style output to be readable */
+/* Base <pre> styling: dark terminal, readable text */
 .markdown-body pre {
-  background: #0b0f0c !important;      /* deep greenish-black */
-  color: #d3eed8 !important;           /* readable text */
+  background-color: #050b08 !important;  /* deep green-black */
+  color: #d3eed8 !important;             /* pleasant pale green */
   border: 1px solid #22352b !important;
 }
 
+/* Inner <code> element inside the block */
 .markdown-body pre code {
-  background: none !important;
+  background-color: transparent !important;
+  color: #d3eed8 !important;
 }
 
-/* If GitHub tries to color specific syntax tokens, nuke them */
+/* GitHub syntax token classes: nuke their colors */
 .markdown-body pre .pl-c,
 .markdown-body pre .pl-c1,
 .markdown-body pre .pl-s,
@@ -44,5 +42,18 @@
 .markdown-body pre .pl-mi1,
 .markdown-body pre .pl-mi2,
 .markdown-body pre .pl-mdr {
-  color: #d3eed8 !important;
+  color: inherit !important;
+}
+
+/* EXTRA: explicitly kill background on spans GitHub injects */
+.markdown-body pre code span,
+.markdown-body pre span {
+  background: transparent !important;
+  color: inherit !important;
+}
+
+/* Make TEXT (```text) blocks especially dark / readable */
+.markdown-body pre:has(code.language-text) {
+  background-color: #040705 !important;  /* slightly different dark */
+  color: #dbe7dd !important;
 }
