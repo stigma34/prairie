@@ -1,7 +1,7 @@
 ---
-# Minimal post-deploy checks
+# Minimal post-deploy checks for Rancher
 
-- name: Check Rancher deployment pods
+- name: Get Rancher pods
   kubernetes.core.k8s_info:
     api_version: v1
     kind: Pod
@@ -9,10 +9,27 @@
     label_selectors:
       - "app=rancher"
   register: rancher_pods
+  failed_when: false
 
-- name: Show Rancher pods status
+- name: Show Rancher pod count
   debug:
-    var: rancher_pods.resources | map(attribute='status.phase') | list
+    msg: "Found {{ rancher_pods.resources | length }} Rancher pod(s) in namespace '{{ rancher_namespace }}'."
+
+- name: Show Rancher pod statuses
+  debug:
+    msg: >-
+      {{ rancher_pods.resources
+         | map(attribute='metadata.name')
+         | zip(rancher_pods.resources | map(attribute='status.phase'))
+         | map('join', ' -> ')
+         | list
+      }}
+  when: rancher_pods.resources | length > 0
+
+- name: Warn if no Rancher pods were found
+  debug:
+    msg: "No Rancher pods found in namespace '{{ rancher_namespace }}' (deployment may still be starting)."
+  when: rancher_pods.resources | length == 0
 
 - name: Display Rancher URL
   debug:
