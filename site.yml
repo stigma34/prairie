@@ -1,0 +1,11 @@
+---
+- name: Prairie single-node Rancher deployment
+  hosts: cattle
+  become: true
+  gather_facts: true
+
+  roles:
+    - base
+    - k3s
+    - rancher
+    - tls

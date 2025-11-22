@@ -1,0 +1,7 @@
+---
+# Prairie TLS role
+# Let’s Encrypt, cert-manager/certbot wiring will go here later.
+
+- name: Placeholder TLS task
+  debug:
+    msg: "Prairie TLS role: future TLS automation lives here."

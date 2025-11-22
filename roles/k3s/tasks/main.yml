@@ -1,0 +1,7 @@
+---
+# Prairie k3s role
+# k3s install and systemd service management will live here.
+
+- name: Placeholder k3s task
+  debug:
+    msg: "Prairie k3s role: k3s install goes here."

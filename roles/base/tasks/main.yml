@@ -1,0 +1,7 @@
+---
+# Prairie base role
+# OS prep, packages, firewalld/ufw, sysctl, etc. will live here.
+
+- name: Placeholder base task
+  debug:
+    msg: "Prairie base role: OS prep goes here."
