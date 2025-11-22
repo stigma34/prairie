@@ -237,3 +237,52 @@ body {
   font-size: 1rem;
   color: var(--text-muted);
 }
+
+/* --- Fix for GitHub code highlighter overriding our theme --- */
+
+.markdown-body pre code *,
+.markdown-body code * {
+  color: inherit !important;
+  background: transparent !important;
+}
+
+/* Force foreground text inside code blocks */
+.markdown-body pre code {
+  color: #d3eed8 !important;  /* pleasant pale green */
+}
+
+/* Force tree-style output to be readable */
+.markdown-body pre {
+  background: #0b0f0c !important;      /* deep greenish-black */
+  color: #d3eed8 !important;           /* readable text */
+  border: 1px solid #22352b !important;
+}
+
+.markdown-body pre code {
+  background: none !important;
+}
+
+/* If GitHub tries to color specific syntax tokens, nuke them */
+.markdown-body pre .pl-c,
+.markdown-body pre .pl-c1,
+.markdown-body pre .pl-s,
+.markdown-body pre .pl-k,
+.markdown-body pre .pl-en,
+.markdown-body pre .pl-pds,
+.markdown-body pre .pl-ent,
+.markdown-body pre .pl-smi,
+.markdown-body pre .pl-s1,
+.markdown-body pre .pl-v,
+.markdown-body pre .pl-sr,
+.markdown-body pre .pl-ml,
+.markdown-body pre .pl-bu,
+.markdown-body pre .pl-mh,
+.markdown-body pre .pl-mq,
+.markdown-body pre .pl-mi,
+.markdown-body pre .pl-mb,
+.markdown-body pre .pl-md,
+.markdown-body pre .pl-mi1,
+.markdown-body pre .pl-mi2,
+.markdown-body pre .pl-mdr {
+  color: #d3eed8 !important;
+}
