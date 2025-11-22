@@ -411,3 +411,48 @@ body {
 .markdown-body pre::after {
   top: 0.65rem !important;           /* was 0.55rem */
 }
+
+/* ============================================================
+   TACTICAL BUTTON FOR REPOSITORY LINK
+   ============================================================ */
+
+.tactical-button-wrapper {
+  margin-top: 3rem;
+  text-align: center;
+}
+
+.tactical-button {
+  display: inline-block;
+  padding: 0.9rem 2rem;
+  border-radius: 0.75rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  color: #d7e5d8;
+  background: linear-gradient(90deg, #0c322c, #192072, #2453ff);
+  border: 1px solid rgba(48, 186, 120, 0.4);
+  box-shadow:
+    0 0 0 1px rgba(0,0,0,0.7),
+    0 10px 25px rgba(0,0,0,0.6);
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.tactical-button span {
+  color: #9fb3a3;
+  margin-left: 0.35rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+}
+
+.tactical-button:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 0 0 1px rgba(0,0,0,0.7),
+    0 14px 32px rgba(36, 83, 255, 0.5);
+  background: linear-gradient(90deg, #0c322c, #2453ff, #30ba78);
+}

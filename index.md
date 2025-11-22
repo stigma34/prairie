@@ -27,10 +27,15 @@
   <!-- License -->
   <img src="https://img.shields.io/badge/License-Apache--2.0-30ba78?style=for-the-badge&logo=apache&logoColor=white" />
 
-
-
 </p>
 
+<div class="tactical-button-wrapper">
+  <a class="tactical-button" href="https://github.com/stigma34/prairie" target="_blank">
+    Proceed to the Repository <span>// Begin Deployment</span>
+  </a>
+</div>
+
+<br />
 
 Prairie is a lightweight Ansible-driven deployer for standing up a fully functional Rancher environment on Rocky Linux 10.
 
