@@ -48,7 +48,6 @@ if [[ "${PKG_MGR}" == "dnf" ]]; then
     python3 \
     python3-pip \
     python3-devel \
-    python3-virtualenv \
     gcc \
     openssl-devel \
     kernel-modules-extra
