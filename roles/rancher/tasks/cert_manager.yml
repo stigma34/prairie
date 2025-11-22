@@ -1,4 +1,5 @@
-- name: Apply cert-manager manifest
+---
+- name: Apply cert-manager manifest (CRDs)
   command: kubectl apply -f {{ cert_manager_url }}
   register: certmgr_apply
   changed_when: >
@@ -22,12 +23,14 @@
     wait: true
     timeout: 600s
     values:
-      installCRDs: true
+      # IMPORTANT: CRDs are handled by kubectl apply above,
+      # so Helm must NOT try to manage them.
+      installCRDs: false
   register: cert_manager_helm
 
 - name: Wait for cert-manager pods to be Ready
   command: >
-    kubectl -n cert-manager get pods --no-headers
+    kubectl -n {{ cert_manager_namespace }} get pods --no-headers
   register: certmgr_pods
   changed_when: false
   retries: 30
