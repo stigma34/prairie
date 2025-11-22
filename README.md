@@ -3,6 +3,13 @@
 
 ![Prairie Logo](assets/prairie.png)
 
+![Status](https://img.shields.io/badge/status-broken-red?style=for-the-badge)
+
+> 🚧 **I broke this shit.**  
+> `main` is currently not stable for fresh installs while I debug a cert-manager / Rancher / Traefik issue.  
+> Give me a few hours before you try this in anger.
+
+
 ### Important information
 
 **Note:** This has been tested on Rocky Linux 10 (minimal ISO and Digital Ocean image) and assumes you are working with a fresh install.
