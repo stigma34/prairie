@@ -8,9 +8,6 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
-echo "[+] Installing Ansible collections from requirements.yml..."
-ansible-galaxy collection install -r "${PROJECT_ROOT}/collections/requirements.yml"
-
 # Walk up until we find ansible.cfg – that directory is our repo root
 ROOT_DIR="${SCRIPT_DIR}"
 while [[ "${ROOT_DIR}" != "/" && ! -f "${ROOT_DIR}/ansible.cfg" ]]; do
@@ -43,6 +40,9 @@ source ~/ansible-venv/bin/activate
 echo "[+] Upgrading pip and installing Ansible..."
 pip install --upgrade pip wheel
 pip install ansible ansible-lint
+
+echo "[+] Installing Ansible collections from requirements.yml..."
+ansible-galaxy collection install -r "${PROJECT_ROOT}/collections/requirements.yml"
 
 echo ""
 echo "[+] Ansible installation complete!"
