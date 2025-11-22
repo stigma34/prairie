@@ -2,6 +2,34 @@
 
 # Prairie
 
+<!-- Prairie / Tactical Rancher Badges -->
+
+<p align="left">
+
+  <!-- Ansible -->
+  <img src="https://img.shields.io/badge/Ansible-2.17+-30ba78?style=for-the-badge&logo=ansible&logoColor=white" />
+
+  <!-- Rancher -->
+  <img src="https://img.shields.io/badge/Rancher-2.9+-2453ff?style=for-the-badge&logo=rancher&logoColor=white" />
+
+  <!-- k3s -->
+  <img src="https://img.shields.io/badge/k3s-Latest-2453ff?style=for-the-badge&logo=kubernetes&logoColor=white" />
+
+  <!-- Helm -->
+  <img src="https://img.shields.io/badge/Helm-3+-192072?style=for-the-badge&logo=helm&logoColor=white" />
+
+  <!-- Rocky Linux -->
+  <img src="https://img.shields.io/badge/Rocky%20Linux-10-0c322c?style=for-the-badge&logo=rockylinux&logoColor=white" />
+
+  <!-- DigitalOcean -->
+  <img src="https://img.shields.io/badge/DigitalOcean-Supported-006aff?style=for-the-badge&logo=digitalocean&logoColor=white" />
+
+  <!-- License (MIT assumed, tweak as needed) -->
+  <img src="https://img.shields.io/badge/License-MIT-555?style=for-the-badge" />
+
+</p>
+
+
 Prairie is a lightweight Ansible-driven deployer for standing up a fully functional Rancher environment on Rocky Linux 10.
 
 It’s designed to take a clean Rocky 10 box (cloud image or bare-metal/VM), harden it just enough, install k3s, deploy Rancher via Helm, and leave you with a working Rancher UI at a known URL — without you having to click through a single web installer screen.
