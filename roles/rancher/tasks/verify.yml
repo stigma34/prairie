@@ -1,16 +1,28 @@
 ---
+# Human-readable Rancher status with per-pod classification
+
 - name: Get Rancher pods in {{ rancher_namespace }}
   command: kubectl -n {{ rancher_namespace }} get pods --no-headers
   register: rancher_pods
   changed_when: false
   failed_when: false
 
-- name: Show Rancher pods
+- name: Build Rancher pod summary list
+  set_fact:
+    rancher_summary: "{{ rancher_pods.stdout_lines
+                         | map('regex_replace', '^(\\S+)\\s+(\\S+)\\s+(\\S+)\\s+(\\S+)\\s+(.*)$',
+                                 '\\1 -> \\3 (\\2 ready, age \\5)')
+                         | list }}"
+  when: rancher_pods.stdout_lines is defined
+
+- name: Show Rancher pod summary
   debug:
     msg: |
-      Rancher pods in namespace '{{ rancher_namespace }}':
-      {{ rancher_pods.stdout | default('(none)') }}
-
+      Rancher pod status summary:
+      {% for line in rancher_summary %}
+      - {{ line }}
+      {% endfor %}
+  when: rancher_pods.stdout_lines is defined
 
 - name: Display Rancher URL
   debug:
