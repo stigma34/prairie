@@ -41,7 +41,7 @@ At this time, there really are none, the ansible_init.sh will pull down everythi
 5.  Go ahead and run the playbook at this point.
 
     ```bash
-    ansible-playbook site.yml
+    ansible-playbook deploy_rancher.yml
     ```
 
 ### Incoming Features (SitRep)
