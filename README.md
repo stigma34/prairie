@@ -5,7 +5,7 @@
 
 ### Important information
 
-**Note:** This has been tested on Rocky Linux 10 (minimal ISO and Digital Ocean image)
+**Note:** This has been tested on Rocky Linux 10 (minimal ISO and Digital Ocean image) and assumes you are working with a fresh install.
 
 **Note:** This currently only installs a single node - this is meant for spinning up a quick development environment essentially.  Work will be done over time to build this out into a full-fledged deployer of multi-node, etc.
 
@@ -18,11 +18,13 @@ At this time, there really are none, the ansible_init.sh will pull down everythi
 ### Installation
 
 1.  Clone the repository to your target server - the one you want to become the single-node Rancher cluster.
-2.  Run the **ansible_init.sh** script.  This will pull down all the necessary packages, setup your virtualenv, inject a vault for you to use, and encrypt it for you.  **Note:** You may need to reboot after this completes if `kernel-modules-extra` had to be installed or a new kernel, as you'll want everything as fresh as possible.
+2.  Run the **ansible_init.sh** script.  This will pull down all the necessary packages, setup your virtualenv, inject a vault for you to use, and encrypt it for you.
 
     ```bash
     ./prairie/tools/ansible_init.sh
     ```
+    
+    **Note:** You may need to reboot after this completes if `kernel-modules-extra` had to be installed or a new kernel, as you'll want everything as fresh as possible.
 
 3.  Source your virtualenv to start working on it.
 
