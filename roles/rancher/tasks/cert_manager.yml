@@ -1,6 +1,4 @@
 ---
-# cert-manager via upstream manifest (no Helm chart)
-
 - name: Apply cert-manager manifest (CRDs + controllers)
   command: kubectl apply -f {{ cert_manager_url }}
   register: certmgr_apply

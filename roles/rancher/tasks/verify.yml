@@ -1,6 +1,4 @@
 ---
-# Minimal post-deploy checks for Rancher (kubectl-based)
-
 - name: Get Rancher pods in {{ rancher_namespace }}
   command: kubectl -n {{ rancher_namespace }} get pods --no-headers
   register: rancher_pods
@@ -9,9 +7,10 @@
 
 - name: Show Rancher pods
   debug:
-    msg: >
+    msg: |
       Rancher pods in namespace '{{ rancher_namespace }}':
-      {{ rancher_pods.stdout_lines | default(['(none)']) }}
+      {{ rancher_pods.stdout | default('(none)') }}
+
 
 - name: Display Rancher URL
   debug:

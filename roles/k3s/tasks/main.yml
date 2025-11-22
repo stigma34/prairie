@@ -1,6 +1,4 @@
 ---
-# Prairie k3s role – installs and ensures k3s is running
-
 - name: Check if k3s binary is already present
   stat:
     path: "{{ k3s_binary_path }}"

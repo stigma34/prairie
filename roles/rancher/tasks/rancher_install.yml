@@ -1,6 +1,4 @@
 ---
-# Rancher deployment via Helm CLI (no kubernetes.core.helm)
-
 - name: Ensure cattle-system namespace exists
   command: kubectl get namespace {{ rancher_namespace }}
   register: cattle_ns
