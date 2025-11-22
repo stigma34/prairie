@@ -24,7 +24,12 @@ Prairie is built to:
 ## High-Level Flow
 
 1. **Bootstrap secrets & vault**
-   - Run `./prairie/tools/ansible_init.sh`
+   - Run:
+
+     ```bash
+     ./prairie/tools/ansible_init.sh
+     ```
+
    - Script:
      - Creates `group_vars/cattle/vault.yml` with starter values.
      - Generates `.vault.key` (if missing) next to `ansible.cfg`.
@@ -78,4 +83,3 @@ prairie/
 ├── seed_rancher.yml         # Main playbook (entrypoint)
 └── tools/
     └── ansible_init.sh      # Vault/secret bootstrap script
-```
