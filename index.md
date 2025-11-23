@@ -96,14 +96,31 @@ Prairie is built to:
 
   <div class="features-grid">
 
-    <div class="feature-item">
-      <h3>Multi-Distro Compatibility Package</h3>
+    <!-- Completed -->
+    <div class="feature-item completed">
+      <div class="feature-header">
+        <h3>Multi-Distro Compatibility Package</h3>
+        <span class="completed-badge">Completed ✔ — v0.1.1</span>
+      </div>
       <p>
-        Cross-train Prairie to deploy flawlessly on Fedora, RHEL/Rocky, Debian, and Ubuntu.
-        One playbook. Any AO.
+        Prairie now deploys seamlessly across Rocky, RHEL, Fedora, Debian, and Ubuntu.
+        Unified logic. Zero guesswork. One playbook, any AO.
       </p>
     </div>
 
+    <div class="feature-item completed">
+      <div class="feature-header">
+        <h3>Role-Oriented Architecture Overhaul</h3>
+        <span class="completed-badge">Completed ✔ — v0.1.1</span>
+      </div>
+      <p>
+        Prairie is now compartmentalized into clear operational modules:
+        Base Ops, K3s Provisioning, Rancher Deployment, and TLS.
+        Cleaner structure. Easier maintenance. Better ops flow.
+      </p>
+    </div>
+
+    <!-- In Progress / Future Work -->
     <div class="feature-item">
       <h3>Hardened TLS Integration</h3>
       <p>
@@ -124,15 +141,8 @@ Prairie is built to:
       <h3>Prairie Command Pod</h3>
       <p>
         An Ansible-loaded, Kubernetes-resident control unit.
-        Fire off cluster expansions and updates straight from the inside—no external operator required.
-      </p>
-    </div>
-
-    <div class="feature-item">
-      <h3>Role-Oriented Architecture Overhaul</h3>
-      <p>
-        Clean separation of responsibilities. Base ops, K3s provisioning, Rancher deployment,
-        and TLS all compartmentalized like proper mission modules.
+        Fire off cluster expansions and updates straight from inside the wire —
+        no external operator required.
       </p>
     </div>
 
@@ -140,47 +150,72 @@ Prairie is built to:
       <h3>Automated Node Enrollment</h3>
       <p>
         Drop a new server into the field and let Prairie pull tokens, push configs,
-        and slot it into the cluster without human intervention.
+        and slot it into the cluster automatically.
       </p>
     </div>
 
     <div class="feature-item">
       <h3>Security Posture Enhancement</h3>
       <p>
-        Unified firewall doctrine, SSH lockdown, sysctl hardening, and distro-specific
-        quirks neutralized on contact.
+        Unified firewall doctrine, SSH lockdown, sysctl hardening,
+        and distro-specific quirks neutralized on contact.
       </p>
     </div>
 
   </div>
 </div>
 
-
 ## Directory Layout
 
 ```text
 prairie/
+.
 ├── ansible.cfg
-├── assets/
-│   └── prairie.png          # Logo
-├── group_vars/
-│   └── cattle/
-│       └── vault.yml        # Encrypted secrets (via ansible-vault)
-├── inventory/
-│   └── inventory.ini        # Your hosts/groups
-├── roles/
-│   └── rancher/
-│       ├── defaults/
-│       │   └── main.yml     # Rancher/k3s defaults
-│       └── tasks/
-│           ├── helm/        # Helm install, repos, charts
-│           │   ├── build.yml
-│           │   ├── install.yml
-│           │   └── repos.yml
-│           ├── k3s.yml      # k3s installation
-│           ├── main.yml     # Entry point, includes others
-│           └── swap.yml     # Swap handling (if needed)
-├── seed_rancher.yml         # Main playbook (entrypoint)
-└── tools/
-    └── ansible_init.sh      # Vault/secret bootstrap script
+├── assets
+│   └── prairie.png
+├── CHANGELOG.md
+├── collections
+│   └── requirements.yml
+├── deploy_rancher.yml
+├── group_vars
+│   └── cattle
+│       └── vault.yml
+├── inventory
+│   └── inventory.ini
+├── LICENSE
+├── README.md
+├── RELEASE-NOTES.md
+├── roles
+│   ├── base
+│   │   ├── defaults
+│   │   │   └── main.yml
+│   │   └── tasks
+│   │       ├── main.yml
+│   │       └── swap.yml
+│   ├── k3s
+│   │   ├── defaults
+│   │   │   └── main.yml
+│   │   └── tasks
+│   │       └── main.yml
+│   ├── rancher
+│   │   ├── defaults
+│   │   │   └── main.yml
+│   │   └── tasks
+│   │       ├── cert_manager.yml
+│   │       ├── helm.yml
+│   │       ├── main.yml
+│   │       ├── rancher_install.yml
+│   │       └── verify.yml
+│   └── tls
+│       ├── defaults
+│       │   └── main.yml
+│       ├── tasks
+│       │   └── main.yml
+│       └── templates
+│           ├── cluster-issuer-letsencrypt-http01.yaml.j2
+│           ├── clusterissuer-selfsigned.yaml.j2
+│           └── rancher-certificate.yaml.j2
+└── tools
+    └── ansible_init.sh
+
 ```

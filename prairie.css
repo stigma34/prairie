@@ -516,3 +516,26 @@ body {
   line-height: 1.5;
   color: var(--text-muted);
 }
+
+.completed-badge {
+  display: inline-block;
+  background-color: #2e7d32;        /* Tactical green */
+  color: #ffffff;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-left: 10px;
+  white-space: nowrap;
+}
+
+.feature-item.completed {
+  border-left: 4px solid #2e7d32;   /* Subtle visual cue */
+  opacity: 0.95;
+}
+
+.feature-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
