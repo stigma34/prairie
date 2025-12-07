@@ -9,6 +9,19 @@
   command: kubectl create namespace {{ rancher_namespace }}
   when: cattle_ns.rc != 0
 
+- name: Ensure Rancher bootstrap secret exists
+  kubernetes.core.k8s:
+    state: present
+    namespace: "{{ rancher_namespace }}"
+    definition:
+      apiVersion: v1
+      kind: Secret
+      metadata:
+        name: bootstrap-secret
+      type: Opaque
+      data:
+        bootstrapPassword: "{{ rancher_bootstrap_password | b64encode }}"
+
 - name: Deploy or upgrade Rancher (pinned if version set)
   command: >
     helm upgrade --install rancher {{ rancher_helm_repo_name }}/rancher
@@ -17,7 +30,6 @@
     --wait --timeout 1200s
     --set hostname={{ rancher_hostname }}
     --set replicas={{ rancher_replicas }}
-    --set bootstrapPassword={{ rancher_bootstrap_password }}
     --set ingress.tls.source={{ rancher_ingress_tls_source | default('rancher') }}
     {{ '--version ' ~ rancher_chart_version if rancher_chart_version|length > 0 else '' }}
   register: rancher_helm

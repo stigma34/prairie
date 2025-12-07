@@ -27,3 +27,6 @@ cert_manager_startupapicheck_enabled: false
 rancher_hostname: "{{ vault_hostname }}"
 rancher_replicas: 1
 rancher_bootstrap_password: "{{ vault_bootstrap_password | default('admin') }}"
+
+# TLS mode for Rancher ingress (for later flexibility)
+rancher_ingress_tls_source: rancher   # rancher | secret | letsEncrypt
