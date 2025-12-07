@@ -28,5 +28,12 @@ rancher_hostname: "{{ vault_hostname }}"
 rancher_replicas: 1
 rancher_bootstrap_password: "{{ vault_bootstrap_password | default('admin') }}"
 
-# TLS mode for Rancher ingress (for later flexibility)
-rancher_ingress_tls_source: rancher   # rancher | secret | letsEncrypt
+# Prairie feature flags
+prairie_enable_cert_manager: false
+
+# Rancher ingress TLS settings
+# rancher  -> use cert-manager to provision certs
+# secret   -> use pre-created Kubernetes TLS secret
+# letsEncrypt -> (future) LE integration
+rancher_ingress_tls_source: "secret"
+rancher_tls_secret_name: "tls-rancher-ingress"

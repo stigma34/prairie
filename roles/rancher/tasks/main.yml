@@ -4,6 +4,9 @@
 
 - name: Deploy cert-manager
   import_tasks: cert_manager.yml
+  when: prairie_enable_cert_manager
+  tags:
+    - cert-manager
 
 - name: Deploy Rancher
   import_tasks: rancher_install.yml
