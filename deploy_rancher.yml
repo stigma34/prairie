@@ -5,16 +5,22 @@
   gather_facts: true
 
   vars:
-    # default can still be overridden from inventory/group_vars
-    prairie_kubernetes_distribution: "{{ prairie_kubernetes_distribution | default('k3s') }}"
+    # Default Kubernetes distro; can be overridden in inventory or via --extra-vars
+    prairie_kubernetes_distribution: "k3s"
+
+    # Pick the kubeconfig path based on distro
+    prairie_kubeconfig_path: "{{ '/etc/rancher/k3s/k3s.yaml' if prairie_kubernetes_distribution == 'k3s' else '/etc/rancher/rke2/rke2.yaml' }}"
 
   environment:
-    KUBECONFIG: "{{ prairie_kubeconfig_path | default('/etc/rancher/k3s/k3s.yaml') }}"
+    KUBECONFIG: "{{ prairie_kubeconfig_path }}"
 
   roles:
     - base
+
     - role: k3s
       when: prairie_kubernetes_distribution == 'k3s'
+
     - role: rke2
       when: prairie_kubernetes_distribution == 'rke2'
+
     - rancher
