@@ -59,3 +59,15 @@
     insertafter: EOF
     state: present
     backup: yes
+
+- name: Check if RKE2 kubectl binary exists
+  stat:
+    path: /var/lib/rancher/rke2/bin/kubectl
+  register: rke2_kubectl
+
+- name: Symlink kubectl into /usr/local/bin for RKE2
+  file:
+    src: /var/lib/rancher/rke2/bin/kubectl
+    dest: /usr/local/bin/kubectl
+    state: link
+  when: rke2_kubectl.stat.exists
