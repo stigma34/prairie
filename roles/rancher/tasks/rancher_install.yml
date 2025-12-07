@@ -58,7 +58,7 @@
     --set hostname={{ rancher_hostname }}
     --set replicas={{ rancher_replicas }}
     --set ingress.tls.source=letsEncrypt
-    --set letsEncrypt.email={{ lets_encrypt_email }}
+    --set letsEncrypt.email={{ vault_lets_encrypt_email }}
     --set letsEncrypt.ingress.class={{ rancher_ingress_class }}
     {{ '--version ' ~ rancher_chart_version if rancher_chart_version|length > 0 else '' }}
   register: rancher_helm

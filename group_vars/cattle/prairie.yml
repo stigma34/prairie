@@ -7,4 +7,3 @@ helm_version: "v3.18.2"
 prairie_kubernetes_distribution: "rke2"
 
 prairie_tls_mode: "letsencrypt"
-vault_lets_encrypt_email: "you@example.com"   # use a real mailbox

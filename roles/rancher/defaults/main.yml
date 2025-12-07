@@ -40,7 +40,7 @@ rancher_tls_secret_name: "tls-rancher-ingress"
 prairie_tls_mode: "selfsigned"
 
 # Email used for Let's Encrypt registration
-lets_encrypt_email: ""
+vault_lets_encrypt_email: ""
 
 # Ingress class to use for LE HTTP-01 challenges
 # k3s default is traefik, RKE2 default is nginx
