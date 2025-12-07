@@ -1,6 +1,6 @@
 ---
 - name: Apply cert-manager manifest (CRDs)
-  command: kubectl apply -f {{ cert_manager_url }}
+  command: kubectl apply -f "{{ cert_manager_url }}"
   register: certmgr_apply
   changed_when: >
     'configured' in certmgr_apply.stdout or
@@ -8,16 +8,16 @@
 
 - name: Wait for cert-manager CRDs to be Established
   command: >
-    kubectl wait --for=condition=Established --timeout=240s crd
-    -l app.kubernetes.io/name=cert-manager
+    kubectl wait --for=condition=Established --timeout=240s crd -l app.kubernetes.io/name=cert-manager
   register: certmgr_crd_wait
   changed_when: false
 
-- name: Install or upgrade cert-manager via Helm
+- name: Install or upgrade cert-manager via Helm (pinned if version set)
   command: >
     helm upgrade --install cert-manager {{ jetstack_helm_repo_name }}/cert-manager
     --namespace {{ cert_manager_namespace }}
     --create-namespace
+    {{ '--version ' ~ cert_manager_chart_version if cert_manager_chart_version|length > 0 else '' }}
   register: certmgr_helm
   changed_when: >
     'STATUS: deployed' in certmgr_helm.stdout or

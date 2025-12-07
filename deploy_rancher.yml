@@ -3,10 +3,18 @@
   hosts: cattle
   become: true
   gather_facts: true
+
+  vars:
+    # default can still be overridden from inventory/group_vars
+    prairie_kubernetes_distribution: "{{ prairie_kubernetes_distribution | default('k3s') }}"
+
   environment:
-    KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+    KUBECONFIG: "{{ prairie_kubeconfig_path | default('/etc/rancher/k3s/k3s.yaml') }}"
+
   roles:
     - base
-    - k3s
+    - role: k3s
+      when: prairie_kubernetes_distribution == 'k3s'
+    - role: rke2
+      when: prairie_kubernetes_distribution == 'rke2'
     - rancher
-#    - tls

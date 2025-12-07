@@ -1,22 +1,26 @@
 ---
 # Helm repos
-rancher_helm_repo_name: rancher-latest
-rancher_helm_repo_url: "https://releases.rancher.com/server-charts/latest"
-helm_url: https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-4
+rancher_helm_repo_name: rancher-stable
+rancher_helm_repo_url: "https://releases.rancher.com/server-charts/stable"
 
+# Use Helm 3 (Rancher 2.12.x requires Helm 3.18+)
+# Script + version are separate so you can bump without touching tasks.
+helm_url: https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+helm_version: ""
 jetstack_helm_repo_name: jetstack
-cert_manager_url: https://github.com/cert-manager/cert-manager/releases/download/v1.19.1/cert-manager.crds.yaml
 jetstack_helm_repo_url: "https://charts.jetstack.io"
 
 # Namespaces
 rancher_namespace: cattle-system
 cert_manager_namespace: cert-manager
 
-# Optional pinning (leave empty to get latest)
-rancher_chart_version: ""
-cert_manager_chart_version: ""
+# Optional pinning (empty = latest from repo, but you should set these in prod)
+rancher_chart_version: "2.12.3"
+cert_manager_tag: "v1.19.1"              # for GitHub URL
+cert_manager_chart_version: "v1.19.1"    # for Helm
+cert_manager_url: "https://github.com/cert-manager/cert-manager/releases/download/{{ cert_manager_tag }}/cert-manager.crds.yaml"
 
 # Rancher config
 rancher_hostname: "{{ vault_hostname }}"
 rancher_replicas: 1
-rancher_bootstrap_password: "{{ vault_rancher_bootstrap_password | default('admin') }}"
+rancher_bootstrap_password: "{{ vault_bootstrap_password | default('admin') }}"

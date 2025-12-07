@@ -1,0 +1,61 @@
+---
+- name: Check if RKE2 server service is present
+  stat:
+    path: /etc/systemd/system/{{ rke2_service_name }}.service
+  register: rke2_service_file
+
+- name: Download RKE2 install script
+  get_url:
+    url: "{{ rke2_install_script_url }}"
+    dest: /tmp/get-rke2.sh
+    mode: "0755"
+  when: not rke2_service_file.stat.exists
+
+- name: Run RKE2 install script with pinned version
+  shell: >
+    /tmp/get-rke2.sh
+  args:
+    creates: /usr/local/bin/rke2
+  environment:
+    INSTALL_RKE2_VERSION: "{{ rke2_version }}"
+    INSTALL_RKE2_TYPE: "{{ rke2_type }}"
+  when: not rke2_service_file.stat.exists
+
+- name: Ensure RKE2 service is enabled and running
+  systemd:
+    name: "{{ rke2_service_name }}"
+    state: started
+    enabled: true
+
+- name: Wait for RKE2 API to listen on 6443
+  wait_for:
+    host: 127.0.0.1
+    port: 6443
+    delay: 5
+    timeout: 180
+
+- name: Wait for node to become Ready
+  command: /var/lib/rancher/rke2/bin/kubectl get nodes --no-headers
+  register: rke2_nodes
+  changed_when: false
+  retries: 20
+  delay: 6
+  until: rke2_nodes.rc == 0 and ' Ready ' in rke2_nodes.stdout
+
+- name: Add kubectl alias for easier use (RKE2)
+  lineinfile:
+    path: /root/.bashrc
+    regexp: "^alias kubectl="
+    line: "alias kubectl='/var/lib/rancher/rke2/bin/kubectl'"
+    insertafter: EOF
+    state: present
+    backup: yes
+
+- name: Add KUBECONFIG to .bashrc
+  lineinfile:
+    path: /root/.bashrc
+    regexp: "^export KUBECONFIG="
+    line: "export KUBECONFIG={{ prairie_kubeconfig_path }}"
+    insertafter: EOF
+    state: present
+    backup: yes

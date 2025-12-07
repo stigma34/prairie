@@ -9,18 +9,18 @@
   command: kubectl create namespace {{ rancher_namespace }}
   when: cattle_ns.rc != 0
 
-- name: Deploy or upgrade Rancher
+- name: Deploy or upgrade Rancher (pinned if version set)
   command: >
     helm upgrade --install rancher {{ rancher_helm_repo_name }}/rancher
     --namespace {{ rancher_namespace }}
     --create-namespace
-    --wait
-    --timeout 1200s
+    --wait --timeout 1200s
     --set hostname={{ rancher_hostname }}
     --set replicas={{ rancher_replicas }}
     --set bootstrapPassword={{ rancher_bootstrap_password }}
-    --set ingress.tls.source=rancher
+    --set ingress.tls.source={{ rancher_ingress_tls_source | default('rancher') }}
+    {{ '--version ' ~ rancher_chart_version if rancher_chart_version|length > 0 else '' }}
   register: rancher_helm
-  changed_when: "'Release \"rancher\" has been upgraded' in rancher_helm.stdout
-                 or 'Release \"rancher\" has been installed' in rancher_helm.stdout"
-
+  changed_when: >
+    'Release "rancher" has been upgraded' in rancher_helm.stdout or
+    'Release "rancher" has been installed' in rancher_helm.stdout
