@@ -9,18 +9,19 @@
   command: kubectl create namespace {{ rancher_namespace }}
   when: cattle_ns.rc != 0
 
-- name: Ensure Rancher bootstrap secret exists
-  kubernetes.core.k8s:
-    state: present
-    namespace: "{{ rancher_namespace }}"
-    definition:
-      apiVersion: v1
-      kind: Secret
-      metadata:
-        name: bootstrap-secret
-      type: Opaque
-      data:
-        bootstrapPassword: "{{ rancher_bootstrap_password | b64encode }}"
+
+- name: Check if bootstrap-secret exists
+  command: kubectl get secret bootstrap-secret -n {{ rancher_namespace }}
+  register: bootstrap_secret
+  failed_when: false
+  changed_when: false
+
+- name: Create Rancher bootstrap secret if missing
+  command: >
+    kubectl create secret generic bootstrap-secret
+    -n {{ rancher_namespace }}
+    --from-literal=bootstrapPassword='{{ rancher_bootstrap_password }}'
+  when: bootstrap_secret.rc != 0
 
 - name: Deploy or upgrade Rancher (pinned if version set)
   command: >
