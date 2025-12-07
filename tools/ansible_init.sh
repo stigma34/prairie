@@ -80,7 +80,7 @@ source ~/ansible-venv/bin/activate
 
 echo "[+] Upgrading pip and installing Ansible..."
 pip install --upgrade pip wheel
-pip install -r requirements.txt
+pip install -r ../requirements.txt
 
 echo "[+] Installing Ansible collections from requirements.yml..."
 ansible-galaxy collection install -r "${PROJECT_ROOT}/collections/requirements.yml"
