@@ -109,6 +109,7 @@ if [[ ! -f "${VAULT_FILE}" ]]; then
   echo "[prairie-init] Creating initial vault.yml at ${VAULT_FILE}"
   cat > "${VAULT_FILE}" << 'EOF'
 vault_hostname: your.hostname.tld
+vault_lets_encrypt_email: "you@example.com"
 EOF
 else
   echo "[prairie-init] vault.yml already exists, not overwriting."

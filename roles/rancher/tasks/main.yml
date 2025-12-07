@@ -2,14 +2,14 @@
 - name: Prepare Helm and Rancher Helm repo
   import_tasks: helm.yml
 
-- name: Deploy cert-manager
-  import_tasks: cert_manager.yml
+- import_tasks: cert_manager.yml
   when: prairie_enable_cert_manager
   tags:
     - cert-manager
 
-- name: Deploy Rancher
-  import_tasks: rancher_install.yml
+- import_tasks: rancher_install.yml
+  tags:
+    - rancher
 
 - name: Verify Rancher deployment and ingress
   import_tasks: verify.yml

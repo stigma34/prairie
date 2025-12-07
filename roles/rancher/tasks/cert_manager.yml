@@ -1,5 +1,5 @@
 ---
-- name: Apply cert-manager manifest (CRDs)
+- name: Apply cert-manager CRDs
   command: kubectl apply -f "{{ cert_manager_url }}"
   register: certmgr_apply
   changed_when: >
@@ -17,8 +17,8 @@
     helm upgrade --install cert-manager {{ jetstack_helm_repo_name }}/cert-manager
     --namespace {{ cert_manager_namespace }}
     --create-namespace
+    --set startupapicheck.enabled=false
     {{ '--version ' ~ cert_manager_chart_version if cert_manager_chart_version|length > 0 else '' }}
-    --set startupapicheck.enabled={{ 'true' if cert_manager_startupapicheck_enabled else 'false' }}
   register: certmgr_helm
   changed_when: >
     'STATUS: deployed' in certmgr_helm.stdout or
@@ -27,8 +27,7 @@
     - cert-manager
 
 - name: Wait for cert-manager pods to be Ready
-  command: >
-    kubectl -n {{ cert_manager_namespace }} get pods --no-headers
+  command: kubectl -n {{ cert_manager_namespace }} get pods --no-headers
   register: certmgr_pods
   changed_when: false
   retries: 30
@@ -37,5 +36,17 @@
     - certmgr_pods.rc == 0
     - certmgr_pods.stdout != ""
     - certmgr_pods.stdout is search("Running")
+  tags:
+    - cert-manager
+
+- name: Wait for cert-manager webhook endpoints to be ready
+  command: kubectl -n {{ cert_manager_namespace }} get endpoints cert-manager-webhook -o json
+  register: certmgr_webhook_ep
+  changed_when: false
+  retries: 30
+  delay: 6
+  until:
+    - certmgr_webhook_ep.rc == 0
+    - certmgr_webhook_ep.stdout is search('"addresses"')
   tags:
     - cert-manager

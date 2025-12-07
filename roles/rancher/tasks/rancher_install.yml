@@ -1,4 +1,3 @@
----
 - name: Ensure cattle-system namespace exists
   command: kubectl get namespace {{ rancher_namespace }}
   register: cattle_ns
@@ -9,12 +8,12 @@
   command: kubectl create namespace {{ rancher_namespace }}
   when: cattle_ns.rc != 0
 
-
 - name: Check if Rancher TLS secret exists
   command: kubectl get secret tls-rancher-ingress -n {{ rancher_namespace }}
   register: rancher_tls_secret
   failed_when: false
   changed_when: false
+  when: prairie_tls_mode == 'selfsigned'
 
 - name: Create self-signed Rancher TLS secret if missing
   shell: |
@@ -29,10 +28,11 @@
       --key=/tmp/rancher-tls.key
   args:
     creates: /tmp/rancher-tls.crt
-  when: rancher_tls_secret.rc != 0
+  when:
+    - prairie_tls_mode == 'selfsigned'
+    - rancher_tls_secret.rc != 0
 
-
-- name: Deploy or upgrade Rancher (pinned if version set)
+- name: Deploy or upgrade Rancher (self-signed secret)
   command: >
     helm upgrade --install rancher {{ rancher_helm_repo_name }}/rancher
     --namespace {{ rancher_namespace }}
@@ -47,3 +47,23 @@
   changed_when: >
     'Release "rancher" has been upgraded' in rancher_helm.stdout or
     'Release "rancher" has been installed' in rancher_helm.stdout
+  when: prairie_tls_mode == 'selfsigned'
+
+- name: Deploy or upgrade Rancher (Let's Encrypt)
+  command: >
+    helm upgrade --install rancher {{ rancher_helm_repo_name }}/rancher
+    --namespace {{ rancher_namespace }}
+    --create-namespace
+    --wait --timeout 1200s
+    --set hostname={{ rancher_hostname }}
+    --set replicas={{ rancher_replicas }}
+    --set ingress.tls.source=letsEncrypt
+    --set letsEncrypt.email={{ lets_encrypt_email }}
+    --set letsEncrypt.ingress.class={{ rancher_ingress_class }}
+    {{ '--version ' ~ rancher_chart_version if rancher_chart_version|length > 0 else '' }}
+  register: rancher_helm
+  changed_when: >
+    'Release "rancher" has been upgraded' in rancher_helm.stdout or
+    'Release "rancher" has been installed' in rancher_helm.stdout
+  when: prairie_tls_mode == 'letsencrypt'
+

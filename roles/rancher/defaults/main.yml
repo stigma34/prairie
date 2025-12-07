@@ -27,12 +27,25 @@ cert_manager_startupapicheck_enabled: false
 rancher_hostname: "{{ vault_hostname }}"
 rancher_replicas: 1
 
-# Prairie feature flags
-prairie_enable_cert_manager: false
-
 # Rancher ingress TLS settings
 # rancher  -> use cert-manager to provision certs
 # secret   -> use pre-created Kubernetes TLS secret
 # letsEncrypt -> (future) LE integration
 rancher_ingress_tls_source: "secret"
 rancher_tls_secret_name: "tls-rancher-ingress"
+
+# TLS mode for Rancher ingress:
+# - selfsigned: use tls-rancher-ingress secret created by Prairie
+# - letsencrypt: use Rancher + cert-manager + Let's Encrypt
+prairie_tls_mode: "selfsigned"
+
+# Email used for Let's Encrypt registration
+lets_encrypt_email: ""
+
+# Ingress class to use for LE HTTP-01 challenges
+# k3s default is traefik, RKE2 default is nginx
+rancher_ingress_class: >-
+  {{ 'traefik' if prairie_kubernetes_distribution == 'k3s' else 'nginx' }}
+
+# Flag controlling whether cert-manager is installed
+prairie_enable_cert_manager: "{{ prairie_tls_mode in ['letsencrypt', 'rancher'] }}"
