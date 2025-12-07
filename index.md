@@ -2,6 +2,10 @@
 
 # Prairie
 
+<p class="version-tag">
+  Current Release: <strong>v0.2.0</strong> &mdash; TLS + Longhorn Ready
+</p>
+
 <!-- Prairie / Tactical Rancher Badges -->
 
 <p align="left">
@@ -37,22 +41,31 @@
 
 <br />
 
-Prairie is a lightweight Ansible-driven deployer for standing up a fully functional Rancher environment on Rocky Linux 10.
+Prairie is a **tactical, Ansible-driven deployer** for bringing up a fully functional Rancher control plane on **Rocky Linux 10 and other major distros** with **green-lock TLS** and **optional Longhorn storage**.
 
-It’s designed to take a clean Rocky 10 box (cloud image or bare-metal/VM), harden it just enough, install k3s, deploy Rancher via Helm, and leave you with a working Rancher UI at a known URL — without you having to click through a single web installer screen.
+It’s built for operators who want a **repeatable, low-friction Rancher install**: take a clean host (cloud image or bare metal/VM), run Prairie, and end up with:
 
-Prairie grew out of a real need: repeatable Rancher installs that work consistently across **DigitalOcean Rocky 10** images and **minimal ISOs**, and keep secrets out of logs.
+- k3s installed and wired up
+- Rancher online at a **known HTTPS URL**
+- Longhorn (optionally) deployed for persistent storage
+- Secrets locked down with Ansible Vault
+
+No web installer click-throughs. No one-off bash scripts. One flow, any AO.
+
+Prairie grew out of a real need: consistent Rancher deployments across **DigitalOcean Rocky 10** images and **minimal ISOs**, without leaking secrets into logs or having to remember “that one weird kernel module fix” every time.
 
 ---
 
-## Goals
+## What Prairie Does
 
 Prairie is built to:
 
-- Automate **end-to-end Rancher deployment** on Rocky 10 using Ansible.
-- Handle annoying platform differences (like missing `br_netfilter` on some cloud images).
-- Keep sensitive data out of logs using **Ansible Vault** and `no_log: true`.
-- Be **clone → init → run** simple for future-you and other operators.
+- Automate **end-to-end Rancher deployment** on Rocky 10 (and friends) using Ansible.
+- Smooth over distro quirks (e.g., missing `br_netfilter` or odd cloud image defaults).
+- Deliver **TLS out of the box** using cert-manager with Let’s Encrypt HTTP-01 or a self-signed issuer.
+- Provide **optional Longhorn integration** so you get a clean, opinionated storage story.
+- Keep sensitive data out of logs via **Ansible Vault** and `no_log: true`.
+- Stay **clone → init → run** simple for future-you and other operators.
 
 ---
 
@@ -66,33 +79,46 @@ Prairie is built to:
      ```
 
    - Script:
-     - Creates `group_vars/cattle/vault.yml` with starter values.
+     - Creates `group_vars/cattle/vault.yml` with starter values (hostname, email, Rancher admin seed, etc.).
      - Generates `.vault.key` (if missing) next to `ansible.cfg`.
      - Encrypts `vault.yml` with vault ID `default` via Ansible Vault.
 
 2. **Prepare the host**
-   - Ensure `br_netfilter` is present and loaded.
-   - Configure it to load at boot for k3s/Rancher networking.
-   - (Optional) Handle swap, basic hardening, etc.
+   - Ensures `br_netfilter` and friends are present and loaded.
+   - Configures sysctl so k3s/Rancher networking behaves.
+   - Handles baseline prep and optional swap tweaks.
 
 3. **Install k3s**
-   - Installs k3s using the recommended install script.
-   - Ensures idempotency so reruns don’t break the cluster.
+   - Installs k3s using the recommended upstream install script.
+   - Keeps the run **idempotent** so reruns don’t wreck your cluster.
 
 4. **Install Rancher via Helm**
-   - Installs Helm (via the official Helm install script).
-   - Adds required Helm repos.
+   - Installs Helm using the official Helm script.
+   - Adds the required Helm repos.
    - Deploys Rancher into `cattle-system`.
-   - Configures ingress/TLS based on your `vault_hostname`.
+   - Binds ingress to your `vault_hostname` and preps for TLS.
 
-5. **Print the Rancher URL**
-   - At the end of the Rancher role, Prairie prints:
-     - `Rancher is available at: https://{{ "vault_hostname" }}/`
+5. **Wire Up TLS**
+   - Deploys cert-manager.
+   - Creates a **ClusterIssuer** (Let’s Encrypt HTTP-01 or self-signed).
+   - Applies a Rancher `Certificate` resource and waits for the cert to go Ready.
+   - Leaves you with a **green-lock Rancher UI** at your hostname.
+
+6. **(Optional) Deploy Longhorn**
+   - Installs Longhorn into the cluster.
+   - Provides a clean, Kubernetes-native storage layer for workloads you’ll run under Rancher.
+
+7. **Print the Rancher URL**
+   - At the end of the Rancher/TLS flow, Prairie prints:
+
+     ```text
+     Rancher is available at: https://<your-vault-hostname>/
+     ```
 
 ---
 
 <div class="incoming-features-card">
-  <h2>Incoming Features <span>(SitRep)</span></h2>
+  <h2>Capabilities & Roadmap <span>(SitRep)</span></h2>
 
   <div class="features-grid">
 
@@ -103,8 +129,8 @@ Prairie is built to:
         <span class="completed-badge">Completed ✔ — v0.1.1</span>
       </div>
       <p>
-        Prairie now deploys seamlessly across Rocky, RHEL, Fedora, Debian, and Ubuntu.
-        Unified logic. Zero guesswork. One playbook, any AO.
+        Prairie deploys cleanly across Rocky, RHEL, Fedora, Debian, and Ubuntu.
+        Unified logic. One playbook, multiple operating areas.
       </p>
     </div>
 
@@ -114,108 +140,65 @@ Prairie is built to:
         <span class="completed-badge">Completed ✔ — v0.1.1</span>
       </div>
       <p>
-        Prairie is now compartmentalized into clear operational modules:
-        Base Ops, K3s Provisioning, Rancher Deployment, and TLS.
-        Cleaner structure. Easier maintenance. Better ops flow.
+        Base ops, k3s provisioning, Rancher deployment, and TLS split into
+        focused roles. Easier to read, extend, and debug under pressure.
       </p>
     </div>
 
-    <!-- In Progress / Future Work -->
-    <div class="feature-item">
-      <h3>Hardened TLS Integration</h3>
+    <div class="feature-item completed">
+      <div class="feature-header">
+        <h3>Hardened TLS Integration</h3>
+        <span class="completed-badge">Completed ✔ — v0.2.0</span>
+      </div>
       <p>
-        Cert-manager or certbot-driven LE certs. Zero warnings. Zero nonsense.
-        Full green-lock readiness.
+        cert-manager-driven certificates with Let’s Encrypt or self-signed
+        issuers. No more “Not Secure” banners — just a proper green lock on first contact.
       </p>
     </div>
 
+    <div class="feature-item completed">
+      <div class="feature-header">
+        <h3>Longhorn Storage Pack</h3>
+        <span class="completed-badge">Completed ✔ — v0.2.0</span>
+      </div>
+      <p>
+        Optional Longhorn deployment so your Rancher-managed cluster has a
+        battle-ready, replicated storage layer from day one.
+      </p>
+    </div>
+
+    <!-- Roadmap -->
     <div class="feature-item">
       <h3>Cluster Force Multiplication</h3>
       <p>
-        Promote Prairie from single-node Recon to full multi-node Operations.
-        Controller + worker nodes deployed with precision.
+        Promote Prairie from single-node Recon to full multi-node Operations:
+        controller + worker node orchestration with repeatable inventory patterns.
       </p>
     </div>
 
     <div class="feature-item">
       <h3>Prairie Command Pod</h3>
       <p>
-        An Ansible-loaded, Kubernetes-resident control unit.
-        Fire off cluster expansions and updates straight from inside the wire —
-        no external operator required.
+        An Ansible-loaded, Kubernetes-resident control unit. Trigger expansions,
+        updates, and remediation jobs from inside the cluster — no jump host required.
       </p>
     </div>
 
     <div class="feature-item">
       <h3>Automated Node Enrollment</h3>
       <p>
-        Drop a new server into the field and let Prairie pull tokens, push configs,
-        and slot it into the cluster automatically.
+        Drop a new server on the network and let Prairie pull tokens, push configs,
+        and join it to k3s/Rancher automatically with minimal operator touch.
       </p>
     </div>
 
     <div class="feature-item">
       <h3>Security Posture Enhancement</h3>
       <p>
-        Unified firewall doctrine, SSH lockdown, sysctl hardening,
-        and distro-specific quirks neutralized on contact.
+        Unified firewall doctrine, SSH lockdown, sysctl hardening, and distro-specific
+        quirks neutralized on contact — with toggles for stricter profiles.
       </p>
     </div>
 
   </div>
 </div>
-
-## Directory Layout
-
-```text
-prairie/
-.
-├── ansible.cfg
-├── assets
-│   └── prairie.png
-├── CHANGELOG.md
-├── collections
-│   └── requirements.yml
-├── deploy_rancher.yml
-├── group_vars
-│   └── cattle
-│       └── vault.yml
-├── inventory
-│   └── inventory.ini
-├── LICENSE
-├── README.md
-├── RELEASE-NOTES.md
-├── roles
-│   ├── base
-│   │   ├── defaults
-│   │   │   └── main.yml
-│   │   └── tasks
-│   │       ├── main.yml
-│   │       └── swap.yml
-│   ├── k3s
-│   │   ├── defaults
-│   │   │   └── main.yml
-│   │   └── tasks
-│   │       └── main.yml
-│   ├── rancher
-│   │   ├── defaults
-│   │   │   └── main.yml
-│   │   └── tasks
-│   │       ├── cert_manager.yml
-│   │       ├── helm.yml
-│   │       ├── main.yml
-│   │       ├── rancher_install.yml
-│   │       └── verify.yml
-│   └── tls
-│       ├── defaults
-│       │   └── main.yml
-│       ├── tasks
-│       │   └── main.yml
-│       └── templates
-│           ├── cluster-issuer-letsencrypt-http01.yaml.j2
-│           ├── clusterissuer-selfsigned.yaml.j2
-│           └── rancher-certificate.yaml.j2
-└── tools
-    └── ansible_init.sh
-
-```
