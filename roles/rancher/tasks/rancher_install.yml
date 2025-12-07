@@ -10,12 +10,6 @@
   when: cattle_ns.rc != 0
 
 
-- name: Check if bootstrap-secret exists
-  command: kubectl get secret bootstrap-secret -n {{ rancher_namespace }}
-  register: bootstrap_secret
-  failed_when: false
-  changed_when: false
-
 - name: Check if Rancher TLS secret exists
   command: kubectl get secret tls-rancher-ingress -n {{ rancher_namespace }}
   register: rancher_tls_secret
@@ -53,5 +47,3 @@
   changed_when: >
     'Release "rancher" has been upgraded' in rancher_helm.stdout or
     'Release "rancher" has been installed' in rancher_helm.stdout
-
-

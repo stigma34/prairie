@@ -26,7 +26,6 @@ cert_manager_startupapicheck_enabled: false
 # Rancher config
 rancher_hostname: "{{ vault_hostname }}"
 rancher_replicas: 1
-rancher_bootstrap_password: "{{ vault_bootstrap_password | default('admin') }}"
 
 # Prairie feature flags
 prairie_enable_cert_manager: false
