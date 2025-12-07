@@ -10,7 +10,31 @@ and this project aims to follow [Semantic Versioning](https://semver.org/spec/v2
 ### Added
 - TODO: Document upcoming changes here.
 
----
+## [0.2.0] – 2025-12-07 — "Green Horizon"
+### Added
+- Full **version pinning** for Rancher, k3s/RKE2, Helm, and cert-manager for production stability
+- Support for deploying **either k3s or RKE2** as the Kubernetes distribution
+- **Automated Let's Encrypt TLS** for Rancher via cert-manager (trusted SSL, no warnings)
+- **Dynamic TLS mode** selection:
+  - `prairie_tls_mode: selfsigned` (default)
+  - `prairie_tls_mode: letsencrypt` (with `lets_encrypt_email`)
+- Distro-aware **ingress controller configuration** (traefik for k3s, nginx for RKE2)
+
+### Improved
+- Robust cert-manager installation:
+  - Ensures CRDs established before Helm deploy
+  - Waits for webhook endpoints before Rancher install
+- RKE2 ingress-nginx webhook readiness handling
+- kubectl availability in PATH under RKE2 nodes
+- More reliable Rancher bootstrap workflow
+
+### Fixed
+- Resolved race conditions where Rancher or cert-manager would fail due to readiness issues
+- Eliminated previous namespace/secret bootstrap failures
+- Most "not secure" browser warnings removed by default
+
+### Notes
+- This is a significant feature release—users should update configurations to use new TLS variables as needed.
 
 ## v0.1.2 – Rancher bring-up + firewall rollback
 

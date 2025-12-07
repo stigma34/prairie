@@ -1,3 +1,32 @@
+# Prairie v0.2.0 — Green Horizon
+**Release Date:** 2025-12-07  
+**This is a major upgrade. **
+
+Prairie now delivers **production-ready Rancher** on both K3s and RKE2 — complete with **automatic Let's Encrypt TLS** and strict **version pinning** for stability. Just run the playbook and enjoy a secure UI with a valid certificate.
+
+---
+
+### Highlights
+- Deploy Rancher on **K3s or RKE2** (configurable via `prairie_kubernetes_distribution`)
+- **Browser-trusted HTTPS** using Let’s Encrypt
+- **Pinned versioning** across the entire stack (Rancher, Helm, cert-manager, k3s/RKE2)
+- Hardened cert-manager installation to prevent webhook race conditions
+- Ingress intelligence based on chosen distribution
+
+---
+
+### 🛠 Updated Configuration Options
+Example host/group vars for fully trusted TLS:
+
+```yaml
+prairie_kubernetes_distribution: rke2
+prairie_tls_mode: "letsencrypt"
+
+# The following are in the vault
+vault_hostname: rancher.dev-ide.com
+vault_lets_encrypt_email: "you@example.com"
+```
+
 # Prairie Release Notes – v0.1.2  
 **Release Date:** 2025-11-22
 

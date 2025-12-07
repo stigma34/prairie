@@ -11,8 +11,6 @@
 
 **Note:** This currently only installs a single node - this is meant for spinning up a quick development environment essentially.  Work will be done over time to build this out into a full-fledged deployer of multi-node, etc.
 
-**Note:** As of this writing, 11/22/2025, the version of Rancher that is being installed is - **v2.12.3**
-
 ### Pre-requisites
 
 At this time, there really are none, the ansible_init.sh will pull down everything it needs for you.  I am leaving this section though for just in case something comes up in future releases.
@@ -45,4 +43,3 @@ At this time, there really are none, the ansible_init.sh will pull down everythi
     ```bash
     ansible-playbook deploy_rancher.yml
     ```
-    
