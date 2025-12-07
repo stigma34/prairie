@@ -7,6 +7,7 @@ rke2_version: "v1.31.14+rke2r1"
 helm_version: "v3.18.2"
 longhorn_chart_version: "v1.7.2"
 
+# prairie_kubernetes_distribution: "k3s" or "rke2"
 prairie_kubernetes_distribution: "rke2"
 
 prairie_tls_mode: "letsencrypt"
