@@ -18,6 +18,7 @@
     --namespace {{ cert_manager_namespace }}
     --create-namespace
     {{ '--version ' ~ cert_manager_chart_version if cert_manager_chart_version|length > 0 else '' }}
+    --set startupapicheck.enabled={{ 'true' if cert_manager_startupapicheck_enabled else 'false' }}
   register: certmgr_helm
   changed_when: >
     'STATUS: deployed' in certmgr_helm.stdout or

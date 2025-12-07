@@ -20,6 +20,9 @@ cert_manager_tag: "v1.19.1"              # for GitHub URL
 cert_manager_chart_version: "v1.19.1"    # for Helm
 cert_manager_url: "https://github.com/cert-manager/cert-manager/releases/download/{{ cert_manager_tag }}/cert-manager.crds.yaml"
 
+# Disable cert-manager startup API check job by default (it can be flaky in labs)
+cert_manager_startupapicheck_enabled: false
+
 # Rancher config
 rancher_hostname: "{{ vault_hostname }}"
 rancher_replicas: 1
