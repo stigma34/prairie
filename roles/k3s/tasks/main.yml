@@ -11,13 +11,14 @@
     mode: "0755"
   when: not k3s_bin.stat.exists
 
-- name: Run k3s install script
+- name: Run k3s install script with pinned version
   shell: >
     /tmp/get-k3s.sh {{ k3s_install_extra_args }}
   args:
     creates: "{{ k3s_binary_path }}"
   environment:
     K3S_KUBECONFIG_MODE: "644"
+    INSTALL_K3S_VERSION: "{{ k3s_version }}"
   when: not k3s_bin.stat.exists
 
 - name: Ensure k3s service is enabled and running
@@ -54,7 +55,7 @@
   lineinfile:
     path: /root/.bashrc
     regexp: "^export KUBECONFIG="
-    line: "export KUBECONFIG=/etc/rancher/k3s/k3s.yaml"
+    line: "export KUBECONFIG={{ prairie_kubeconfig_path }}"
     insertafter: EOF
     state: present
     backup: yes

@@ -1,0 +1,14 @@
+---
+rke2_install_script_url: "https://get.rke2.io"
+
+# Stable RKE2 version for Prairie.
+# Example aligned to supported v1.31 line for Rancher 2.12.x
+# See: https://docs.rke2.io/release-notes/v1.31.X
+rke2_version: ""
+
+rke2_type: "server"
+rke2_service_name: "rke2-server"
+rke2_binary_path: "/usr/local/bin/rke2"
+
+# Where Prairie expects the kubeconfig when using RKE2
+prairie_kubeconfig_path: "/etc/rancher/rke2/rke2.yaml"

@@ -7,11 +7,9 @@
 
 ### Important information
 
-**Note:** This has been tested on Rocky Linux 10 (minimal ISO and Digital Ocean image) and assumes you are working with a fresh install.
+**Note:** This has been tested on Rocky Linux 9/10 (minimal ISO and Digital Ocean image) and assumes you are working with a fresh install.
 
 **Note:** This currently only installs a single node - this is meant for spinning up a quick development environment essentially.  Work will be done over time to build this out into a full-fledged deployer of multi-node, etc.
-
-**Note:** As of this writing, 11/22/2025, the version of Rancher that is being installed is - **v2.12.3**
 
 ### Pre-requisites
 
@@ -45,26 +43,3 @@ At this time, there really are none, the ansible_init.sh will pull down everythi
     ```bash
     ansible-playbook deploy_rancher.yml
     ```
-
-### Incoming Features (SitRep)
-
-**Multi-Distro Compatibility Package**
-Cross-train Prairie to deploy flawlessly on Fedora, RHEL/Rocky, Debian, and Ubuntu. One playbook. Any AO.
-
-**Hardened TLS Integration**
-Cert-manager or certbot-driven LE certs. Zero warnings. Zero nonsense. Full green-lock readiness.
-
-**Cluster Force Multiplication**
-Promote Prairie from single-node Recon to full multi-node Operations. Controller + worker nodes deployed with precision.
-
-**Prairie Command Pod**
-An Ansible-loaded, Kubernetes-resident control unit. Fire off cluster expansions and updates straight from the inside—no external operator required.
-
-**Role-Oriented Architecture Overhaul**
-Clean separation of responsibilities. Base ops, K3s provisioning, Rancher deployment, and TLS all compartmentalized like proper mission modules.
-
-**Automated Node Enrollment**
-Drop a new server into the field and let Prairie pull tokens, push configs, and slot it into the cluster without human intervention.
-
-**Security Posture Enhancement**
-Unified firewall doctrine, SSH lockdown, sysctl hardening, and distro-specific quirks neutralized on contact.

@@ -80,7 +80,7 @@ source ~/ansible-venv/bin/activate
 
 echo "[+] Upgrading pip and installing Ansible..."
 pip install --upgrade pip wheel
-pip install ansible ansible-lint
+pip install -r ${PROJECT_ROOT}/requirements.txt
 
 echo "[+] Installing Ansible collections from requirements.yml..."
 ansible-galaxy collection install -r "${PROJECT_ROOT}/collections/requirements.yml"
@@ -109,7 +109,7 @@ if [[ ! -f "${VAULT_FILE}" ]]; then
   echo "[prairie-init] Creating initial vault.yml at ${VAULT_FILE}"
   cat > "${VAULT_FILE}" << 'EOF'
 vault_hostname: your.hostname.tld
-vault_bootstrap_password: "SuperSecret123!"
+vault_lets_encrypt_email: "you@example.com"
 EOF
 else
   echo "[prairie-init] vault.yml already exists, not overwriting."
