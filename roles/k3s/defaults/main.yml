@@ -6,7 +6,7 @@ k3s_install_script_url: "https://get.k3s.io"
 # Example (1.31 line, supported for Rancher 2.12.x): v1.31.14+k3s1
 # See: https://docs.k3s.io/release-notes/v1.31.X
 
-k3s_version: "v1.31.14+k3s1"
+k3s_version: ""
 
 k3s_install_extra_args: ""
 k3s_binary_path: "/usr/local/bin/k3s"

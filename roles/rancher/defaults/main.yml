@@ -15,9 +15,9 @@ rancher_namespace: cattle-system
 cert_manager_namespace: cert-manager
 
 # Optional pinning (empty = latest from repo, but you should set these in prod)
-rancher_chart_version: "2.12.3"
-cert_manager_tag: "v1.19.1"              # for GitHub URL
-cert_manager_chart_version: "v1.19.1"    # for Helm
+rancher_chart_version: ""
+cert_manager_tag: ""              # for GitHub URL
+cert_manager_chart_version: ""    # for Helm
 cert_manager_url: "https://github.com/cert-manager/cert-manager/releases/download/{{ cert_manager_tag }}/cert-manager.crds.yaml"
 
 # Disable cert-manager startup API check job by default (it can be flaky in labs)

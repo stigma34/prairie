@@ -16,11 +16,10 @@
 
   roles:
     - base
-
     - role: k3s
       when: prairie_kubernetes_distribution == 'k3s'
-
     - role: rke2
       when: prairie_kubernetes_distribution == 'rke2'
-
     - rancher
+    - { role: longhorn, when: storage_engine == 'longhorn' }
+
