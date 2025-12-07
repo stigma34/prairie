@@ -6,23 +6,43 @@
   Current Release: <strong>v0.2.0</strong> &mdash; TLS + Longhorn Ready
 </p>
 
-<!-- Prairie / Tactical Rancher Badges -->
+<p class="version-details">
+  <strong>v0.2.0 pinned component stack:</strong><br>
+  Ansible: 8.7.0<br>
+  Rancher: 2.12.3<br>
+  k3s: v1.31.14+k3s1<br>
+  RKE2: v1.31.14+rke2r1<br>
+  Helm: v3.18.2<br>
+  cert-manager: v1.19.1<br>
+</p>
 
 <p align="left">
 
   <!-- Ansible -->
-  <img src="https://img.shields.io/badge/Ansible-2.17+-30ba78?style=for-the-badge&logo=ansible&logoColor=white" />
+  <img src="https://img.shields.io/badge/Ansible-8.7.0-30ba78?style=for-the-badge&logo=ansible&logoColor=white" />
 
   <!-- Rancher -->
-  <img src="https://img.shields.io/badge/Rancher-2.9+-2453ff?style=for-the-badge&logo=rancher&logoColor=white" />
+  <img src="https://img.shields.io/badge/Rancher-2.12.3-2453ff?style=for-the-badge&logo=rancher&logoColor=white" />
 
   <!-- k3s -->
-  <img src="https://img.shields.io/badge/k3s-Latest-2453ff?style=for-the-badge&logo=kubernetes&logoColor=white" />
+  <img src="https://img.shields.io/badge/k3s-v1.31.14%2Bk3s1-2453ff?style=for-the-badge&logo=kubernetes&logoColor=white" />
+
+  <!-- rke2 -->
+  <img src="https://img.shields.io/badge/RKE2-v1.31.14%2Brke2r1-2453ff?style=for-the-badge&logo=kubernetes&logoColor=white" />
 
   <!-- Helm -->
-  <img src="https://img.shields.io/badge/Helm-3+-192072?style=for-the-badge&logo=helm&logoColor=white" />
+  <img src="https://img.shields.io/badge/Helm-v3.18.2-192072?style=for-the-badge&logo=helm&logoColor=white" />
 
-  <!-- Rocky Linux -->
+  <!-- Cert-Manager -->
+  <img src="https://img.shields.io/badge/cert--manager-v1.19.1-326ce5?style=for-the-badge&logo=letsencrypt&logoColor=white" />
+
+  <!-- Let's Encrypt -->
+  <img src="https://img.shields.io/badge/Let%27s%20Encrypt-Supported-003A70?style=for-the-badge&logo=letsencrypt&logoColor=white" />
+
+  <!-- Rocky Linux 9 -->
+  <img src="https://img.shields.io/badge/Rocky%20Linux-9-0c322c?style=for-the-badge&logo=rockylinux&logoColor=white" />
+
+  <!-- Rocky Linux 10 -->
   <img src="https://img.shields.io/badge/Rocky%20Linux-10-0c322c?style=for-the-badge&logo=rockylinux&logoColor=white" />
 
   <!-- DigitalOcean -->
@@ -32,6 +52,7 @@
   <img src="https://img.shields.io/badge/License-Apache--2.0-30ba78?style=for-the-badge&logo=apache&logoColor=white" />
 
 </p>
+
 
 <div class="tactical-button-wrapper">
   <a class="tactical-button" href="https://github.com/stigma34/prairie" target="_blank">
