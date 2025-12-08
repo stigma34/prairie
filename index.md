@@ -3,7 +3,7 @@
 # Prairie
 
 <p class="version-tag">
-  Current Release: <strong>v0.2.0</strong> &mdash; TLS + Longhorn Ready
+  Current Release: <strong>v0.2.1</strong> &mdash; TLS + Longhorn Ready
 </p>
 
 
