@@ -181,7 +181,7 @@ Prairie is built to:
     <div class="feature-item completed">
       <div class="feature-header">
         <h3>Longhorn Storage Pack</h3>
-        <span class="completed-badge">Completed ✔ — v0.2.0</span>
+        <span class="completed-badge">Completed ✔ — v0.2.1</span>
       </div>
       <p>
         Optional Longhorn deployment so your Rancher-managed cluster has a
