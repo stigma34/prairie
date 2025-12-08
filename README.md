@@ -5,6 +5,16 @@
 
 ![Build Status](https://img.shields.io/badge/build-stable-brightgreen?style=for-the-badge)
 
+### Pinned Versions
+| Component | Version |
+|---------|---------|
+| Rancher | `2.12.3` |
+| Cert-Manager | `v1.19.1` |
+| Longhorn | `v1.7.2` |
+| k3s | `v1.31.14+k3s1` |
+| RKE2 | `v1.31.14+rke2r1` |
+| Helm | `v3.18.2` |
+
 ### Important information
 
 **Note:** This has been tested on Rocky Linux 9/10 (minimal ISO and Digital Ocean image) and assumes you are working with a fresh install.
@@ -21,7 +31,7 @@ At this time, there really are none, the ansible_init.sh will pull down everythi
 2.  Run the **ansible_init.sh** script.  This will pull down all the necessary packages, setup your virtualenv, inject a vault for you to use, and encrypt it for you.
 
     ```bash
-    ./prairie/tools/ansible_init.sh
+    ./prairie/tools/prairie_init.sh
     ```
     
     **Note:** You may need to reboot after this completes if `kernel-modules-extra` had to be installed or a new kernel, as you'll want everything as fresh as possible.

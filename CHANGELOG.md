@@ -5,10 +5,29 @@ All notable changes to **Prairie** will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),  
 and this project aims to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## v0.2.1 — Full Rancher + Longhorn Automation (2025-12-08)
 
-### Added
-- TODO: Document upcoming changes here.
+### Major Improvements
+- Fully automated Rancher deployment for both **RKE2** and **k3s**
+- Longhorn storage now **auto-installed**, **version-pinned**, and **validated**
+- Eliminated race conditions with **RKE2 ingress admission webhook**
+- `prairie_kubernetes_distribution` correctly respected (no more overrides)
+- iSCSI dependencies installed + services enabled automatically on supported OSes
+
+### Enhancements
+- Dedicated Longhorn role with StorageClass wait + default-patch logic
+- Removed deprecated/unused TLS role
+- Improved idempotency and role ordering for clean re-runs
+
+### Pinned Versions
+| Component | Version |
+|---------|---------|
+| Rancher | `2.12.3` |
+| Cert-Manager | `v1.19.1` |
+| Longhorn | `v1.7.2` |
+| k3s | `v1.31.14+k3s1` |
+| RKE2 | `v1.31.14+rke2r1` |
+| Helm | `v3.18.2` |
 
 ## [0.2.0] – 2025-12-07 — "Green Horizon"
 ### Added
