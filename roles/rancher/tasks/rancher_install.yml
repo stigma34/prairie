@@ -49,31 +49,19 @@
     'Release "rancher" has been installed' in rancher_helm.stdout
   when: prairie_tls_mode == 'selfsigned'
 
-# ... namespace + self-signed bits unchanged ...
-
-# 🔹 RKE2 + LE: wait for ingress and webhook BEFORE Helm
-- name: Wait for RKE2 ingress-nginx controller deployment to be ready
-  command: >
-    kubectl -n kube-system rollout status deployment/rke2-ingress-nginx-controller
-    --timeout=600s
-  register: rke2_ingress_rollout
-  changed_when: false
-  failed_when: rke2_ingress_rollout.rc != 0
-  when:
-    - prairie_kubernetes_distribution == 'rke2'
-    - prairie_tls_mode == 'letsencrypt'
 
 - name: Wait for RKE2 ingress-nginx admission webhook endpoints
   command: >
     kubectl -n kube-system get endpoints rke2-ingress-nginx-controller-admission
-    -o jsonpath='{.subsets[0].addresses[0].ip}'
+    -o jsonpath='{.subsets[*].addresses[*].ip}'
   register: rke2_ingress_ep
   changed_when: false
-  retries: 30
+  failed_when: false          # don't hard-fail between retries
+  retries: 50                 # ~5 minutes
   delay: 6
   until:
     - rke2_ingress_ep.rc == 0
-    - rke2_ingress_ep.stdout | length > 0
+    - (rke2_ingress_ep.stdout | trim | length) > 0
   when:
     - prairie_kubernetes_distribution == 'rke2'
     - prairie_tls_mode == 'letsencrypt'
@@ -95,3 +83,4 @@
     'Release "rancher" has been upgraded' in rancher_helm.stdout or
     'Release "rancher" has been installed' in rancher_helm.stdout
   when: prairie_tls_mode == 'letsencrypt'
+
