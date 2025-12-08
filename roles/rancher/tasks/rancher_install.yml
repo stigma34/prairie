@@ -49,24 +49,6 @@
     'Release "rancher" has been installed' in rancher_helm.stdout
   when: prairie_tls_mode == 'selfsigned'
 
-- name: Deploy or upgrade Rancher (Let's Encrypt)
-  command: >
-    helm upgrade --install rancher {{ rancher_helm_repo_name }}/rancher
-    --namespace {{ rancher_namespace }}
-    --create-namespace
-    --wait --timeout 1200s
-    --set hostname={{ rancher_hostname }}
-    --set replicas={{ rancher_replicas }}
-    --set ingress.tls.source=letsEncrypt
-    --set letsEncrypt.email={{ vault_lets_encrypt_email }}
-    --set letsEncrypt.ingress.class={{ rancher_ingress_class }}
-    {{ '--version ' ~ rancher_chart_version if rancher_chart_version|length > 0 else '' }}
-  register: rancher_helm
-  changed_when: >
-    'Release "rancher" has been upgraded' in rancher_helm.stdout or
-    'Release "rancher" has been installed' in rancher_helm.stdout
-  when: prairie_tls_mode == 'letsencrypt'
-
 # Only needed when using RKE2 + nginx + Let's Encrypt
 - name: Wait for RKE2 ingress-nginx controller pods to be ready
   command: kubectl -n kube-system get pods -l app.kubernetes.io/name=ingress-nginx --no-headers
@@ -94,3 +76,21 @@
   when:
     - prairie_kubernetes_distribution == 'rke2'
     - prairie_tls_mode == 'letsencrypt'
+
+- name: Deploy or upgrade Rancher (Let's Encrypt)
+  command: >
+    helm upgrade --install rancher {{ rancher_helm_repo_name }}/rancher
+    --namespace {{ rancher_namespace }}
+    --create-namespace
+    --wait --timeout 1200s
+    --set hostname={{ rancher_hostname }}
+    --set replicas={{ rancher_replicas }}
+    --set ingress.tls.source=letsEncrypt
+    --set letsEncrypt.email={{ vault_lets_encrypt_email }}
+    --set letsEncrypt.ingress.class={{ rancher_ingress_class }}
+    {{ '--version ' ~ rancher_chart_version if rancher_chart_version|length > 0 else '' }}
+  register: rancher_helm
+  changed_when: >
+    'Release "rancher" has been upgraded' in rancher_helm.stdout or
+    'Release "rancher" has been installed' in rancher_helm.stdout
+  when: prairie_tls_mode == 'letsencrypt'
