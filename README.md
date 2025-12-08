@@ -24,12 +24,12 @@
 
 ### Pre-requisites
 
-At this time, there really are none, the ansible_init.sh will pull down everything it needs for you.  I am leaving this section though for just in case something comes up in future releases.
+At this time, there really are none, the prairie_init.sh will pull down everything it needs for you.  I am leaving this section though for just in case something comes up in future releases.
 
 ### Installation
 
 1.  Clone the repository to your target server - the one you want to become the single-node Rancher cluster.
-2.  Run the **ansible_init.sh** script.  This will pull down all the necessary packages, setup your virtualenv, inject a vault for you to use, and encrypt it for you.
+2.  Run the **prairie_init.sh** script.  This will pull down all the necessary packages, setup your virtualenv, inject a vault for you to use, and encrypt it for you.
 
     ```bash
     ./prairie/tools/prairie_init.sh
