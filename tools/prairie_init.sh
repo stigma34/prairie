@@ -28,10 +28,6 @@ VAULT_FILE="${VAULT_DIR}/vault.yml"
 # OS detection + package install
 # ---------------------------------------------------------------------------
 
-# ---------------------------------------------------------------------------
-# OS detection + package install
-# ---------------------------------------------------------------------------
-
 if command -v dnf >/dev/null 2>&1; then
   PKG_MGR="dnf"
 elif command -v apt-get >/dev/null 2>&1; then
