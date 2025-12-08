@@ -1,19 +1,5 @@
 # Prairie
 
-<p class="version-tag">
-  Current Release: <strong>v0.2.0</strong> &mdash; TLS + Longhorn Ready
-</p>
-
-<p class="version-details">
-  <strong>v0.2.0 pinned component stack:</strong><br>
-  Ansible: 8.7.0<br>
-  Rancher: 2.12.3<br>
-  k3s: v1.31.14+k3s1<br>
-  RKE2: v1.31.14+rke2r1<br>
-  Helm: v3.18.2<br>
-  cert-manager: v1.19.1<br>
-</p>
-
 ## Automated Rancher deployer using Ansible [Work in Progress]
 
 ![Prairie Logo](assets/prairie.png)
