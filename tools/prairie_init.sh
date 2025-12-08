@@ -28,6 +28,10 @@ VAULT_FILE="${VAULT_DIR}/vault.yml"
 # OS detection + package install
 # ---------------------------------------------------------------------------
 
+# ---------------------------------------------------------------------------
+# OS detection + package install
+# ---------------------------------------------------------------------------
+
 if command -v dnf >/dev/null 2>&1; then
   PKG_MGR="dnf"
 elif command -v apt-get >/dev/null 2>&1; then
@@ -50,7 +54,13 @@ if [[ "${PKG_MGR}" == "dnf" ]]; then
     python3-devel \
     gcc \
     openssl-devel \
-    kernel-modules-extra
+    kernel-modules-extra \
+    iscsi-initiator-utils
+
+  echo "[+] Enabling iSCSI service for Longhorn (dnf/RHEL family)..."
+  if systemctl list-unit-files | grep -q '^iscsid\.service'; then
+    systemctl enable --now iscsid || true
+  fi
 
 elif [[ "${PKG_MGR}" == "apt" ]]; then
   echo "[+] Updating system packages (apt)..."
@@ -64,7 +74,16 @@ elif [[ "${PKG_MGR}" == "apt" ]]; then
     python3-venv \
     python3-dev \
     build-essential \
-    libssl-dev
+    libssl-dev \
+    open-iscsi
+
+  echo "[+] Enabling iSCSI service for Longhorn (apt/Debian family)..."
+  # Different Debian-based distros name this slightly differently, so be flexible
+  if systemctl list-unit-files | grep -q '^open-iscsi\.service'; then
+    systemctl enable --now open-iscsi || true
+  elif systemctl list-unit-files | grep -q '^iscsid\.service'; then
+    systemctl enable --now iscsid || true
+  fi
 fi
 
 # ---------------------------------------------------------------------------

@@ -1,0 +1,42 @@
+- name: Add Longhorn repo
+  command: helm repo add longhorn https://charts.longhorn.io
+  args:
+    creates: /tmp/helm-longhorn-repo-added
+  register: longhorn_repo_add
+  changed_when: "'\"has been added\"' in longhorn_repo_add.stdout"
+  failed_when: longhorn_repo_add.rc != 0
+
+- name: Update repos
+  command: helm repo update
+
+- name: Install Longhorn (version pinned)
+  command: >
+    helm upgrade --install longhorn longhorn/longhorn
+    --namespace longhorn-system
+    --create-namespace
+    --version {{ longhorn_chart_version }}
+
+- name: Wait for Longhorn to become healthy
+  shell: |
+    kubectl wait --for=condition=Ready pod -l app=longhorn-manager \
+      -n longhorn-system --timeout=10m
+
+- name: Wait for Longhorn storageclass to exist
+  command: kubectl get storageclass longhorn -o json
+  register: longhorn_sc
+  changed_when: false
+  failed_when: false
+  retries: 50            # ~5 minutes total
+  delay: 6
+  until:
+    - longhorn_sc.rc == 0
+  when: storage_engine == 'longhorn'
+
+- name: Make Longhorn default storageclass
+  command: >
+    kubectl patch storageclass longhorn
+    -p '{"metadata":{"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+  register: longhorn_sc_patch
+  changed_when: "'patched' in longhorn_sc_patch.stdout"
+  failed_when: longhorn_sc_patch.rc != 0
+  when: storage_engine == 'longhorn'

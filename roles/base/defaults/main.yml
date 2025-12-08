@@ -19,5 +19,4 @@ prairie_manage_firewall: false
 prairie_swap_size: "2G"
 prairie_swappiness: "10"
 
-# prairie_kubernetes_distribution: "k3s" or "rke2"
-prairie_kubernetes_distribution: "k3s"
+prairie_kubernetes_distribution: ""

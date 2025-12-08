@@ -49,6 +49,23 @@
     'Release "rancher" has been installed' in rancher_helm.stdout
   when: prairie_tls_mode == 'selfsigned'
 
+
+- name: Wait for RKE2 ingress-nginx admission webhook endpoints
+  command: >
+    kubectl -n kube-system get endpoints rke2-ingress-nginx-controller-admission
+    -o jsonpath='{.subsets[*].addresses[*].ip}'
+  register: rke2_ingress_ep
+  changed_when: false
+  failed_when: false          # don't hard-fail between retries
+  retries: 50                 # ~5 minutes
+  delay: 6
+  until:
+    - rke2_ingress_ep.rc == 0
+    - (rke2_ingress_ep.stdout | trim | length) > 0
+  when:
+    - prairie_kubernetes_distribution == 'rke2'
+    - prairie_tls_mode == 'letsencrypt'
+
 - name: Deploy or upgrade Rancher (Let's Encrypt)
   command: >
     helm upgrade --install rancher {{ rancher_helm_repo_name }}/rancher
@@ -67,30 +84,3 @@
     'Release "rancher" has been installed' in rancher_helm.stdout
   when: prairie_tls_mode == 'letsencrypt'
 
-# Only needed when using RKE2 + nginx + Let's Encrypt
-- name: Wait for RKE2 ingress-nginx controller pods to be ready
-  command: kubectl -n kube-system get pods -l app.kubernetes.io/name=ingress-nginx --no-headers
-  register: rke2_ingress_pods
-  changed_when: false
-  retries: 30
-  delay: 6
-  until:
-    - rke2_ingress_pods.rc == 0
-    - rke2_ingress_pods.stdout != ""
-    - rke2_ingress_pods.stdout is search("Running")
-  when:
-    - prairie_kubernetes_distribution == 'rke2'
-    - prairie_tls_mode == 'letsencrypt'
-
-- name: Wait for RKE2 ingress-nginx admission webhook endpoints
-  command: kubectl -n kube-system get endpoints rke2-ingress-nginx-controller-admission -o json
-  register: rke2_ingress_ep
-  changed_when: false
-  retries: 30
-  delay: 6
-  until:
-    - rke2_ingress_ep.rc == 0
-    - rke2_ingress_ep.stdout is search('"addresses"')
-  when:
-    - prairie_kubernetes_distribution == 'rke2'
-    - prairie_tls_mode == 'letsencrypt'
