@@ -6,14 +6,15 @@
   Current Release: <strong>v0.2.0</strong> &mdash; TLS + Longhorn Ready
 </p>
 
-<p class="version-details">
-  <strong>v0.2.0 pinned component stack:</strong><br>
-  Ansible: 8.7.0<br>
-  Rancher: 2.12.3<br>
-  k3s: v1.31.14+k3s1<br>
-  RKE2: v1.31.14+rke2r1<br>
-  Helm: v3.18.2<br>
-  cert-manager: v1.19.1<br>
+
+<p align="left">
+  <img src="https://img.shields.io/badge/Prairie-v0.2.1-success">
+  <img src="https://img.shields.io/badge/RKE2-v1.31.14%2Brke2r1-blue">
+  <img src="https://img.shields.io/badge/k3s-v1.31.14%2Bk3s1-blue">
+  <img src="https://img.shields.io/badge/Rancher-2.12.3-0db7ed">
+  <img src="https://img.shields.io/badge/Longhorn-v1.7.2-ff69b4">
+  <img src="https://img.shields.io/badge/cert--manager-v1.19.1-yellow">
+  <img src="https://img.shields.io/badge/Helm-v3.18.2-9cf">
 </p>
 
 <p align="left">
