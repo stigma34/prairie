@@ -6,9 +6,9 @@
 
   vars:
   # Pick the kubeconfig path based on distro, defaulting to k3s only if nothing else sets it
-  prairie_kubeconfig_path: "{{ '/etc/rancher/k3s/k3s.yaml'
-                                if (prairie_kubernetes_distribution | default('k3s')) == 'k3s'
-                                else '/etc/rancher/rke2/rke2.yaml' }}"
+    prairie_kubeconfig_path: "{{ '/etc/rancher/k3s/k3s.yaml'
+                                  if (prairie_kubernetes_distribution | default('k3s')) == 'k3s'
+                                  else '/etc/rancher/rke2/rke2.yaml' }}"
 
   environment:
     KUBECONFIG: "{{ prairie_kubeconfig_path }}"
