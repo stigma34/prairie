@@ -20,5 +20,5 @@
     - role: rke2
       when: prairie_kubernetes_distribution == 'rke2'
     - rancher
-    - { role: longhorn, when: storage_engine == 'longhorn' }
+    - { role: longhorn, when: storage_engine == 'longhorn', tags: 'longhorn' }
 
