@@ -23,7 +23,7 @@
 
 # SUSES: full package update via zypper
 - name: Update OS packages on SUSE family
-  dnf:
+  zypper:
     name: "*"
     state: latest
     update_only: true
