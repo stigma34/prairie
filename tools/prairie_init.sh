@@ -28,16 +28,14 @@ VAULT_FILE="${VAULT_DIR}/vault.yml"
 # OS detection + package install
 # ---------------------------------------------------------------------------
 
-# ---------------------------------------------------------------------------
-# OS detection + package install
-# ---------------------------------------------------------------------------
-
 if command -v dnf >/dev/null 2>&1; then
   PKG_MGR="dnf"
 elif command -v apt-get >/dev/null 2>&1; then
   PKG_MGR="apt"
+elif command -v zypper >/dev/null 2>&1; then
+  PKG_MGR="zypper"
 else
-  echo "[prairie-init] ERROR: Neither dnf nor apt-get found. Unsupported platform." >&2
+  echo "[prairie-init] ERROR: No supported package manager found (dnf/apt-get/zypper). Unsupported platform." >&2
   exit 1
 fi
 
@@ -84,6 +82,30 @@ elif [[ "${PKG_MGR}" == "apt" ]]; then
   elif systemctl list-unit-files | grep -q '^iscsid\.service'; then
     systemctl enable --now iscsid || true
   fi
+
+elif [[ "${PKG_MGR}" == "zypper" ]]; then
+  echo "[+] Refreshing repos (zypper)..."
+  zypper --gpg-auto-import-keys refresh
+
+  echo "[+] Installing required system packages (zypper/openSUSE)..."
+  # Leap/SLES naming is a little different than Debian/RHEL
+  zypper -n install \
+    python3 \
+    python3-pip \
+    python3-virtualenv \
+    python3-devel \
+    gcc \
+    libopenssl-devel \
+    open-iscsi
+
+  echo "[+] Enabling iSCSI service for Longhorn (zypper/openSUSE)..."
+  # openSUSE typically uses iscsid.service + iscsi.service, but be flexible
+  if systemctl list-unit-files | grep -q '^iscsid\.service'; then
+    systemctl enable --now iscsid || true
+  fi
+  if systemctl list-unit-files | grep -q '^iscsi\.service'; then
+    systemctl enable --now iscsi || true
+  fi
 fi
 
 # ---------------------------------------------------------------------------
@@ -91,7 +113,7 @@ fi
 # ---------------------------------------------------------------------------
 
 echo "[+] Creating Ansible virtual environment..."
-python3 -m venv ~/ansible-venv
+python3 -m venv --clear ~/ansible-venv
 
 echo "[+] Activating virtual environment..."
 # shellcheck disable=SC1090
@@ -99,7 +121,7 @@ source ~/ansible-venv/bin/activate
 
 echo "[+] Upgrading pip and installing Ansible..."
 pip install --upgrade pip wheel
-pip install -r ${PROJECT_ROOT}/requirements.txt
+pip install -r "${PROJECT_ROOT}/requirements.txt"
 
 echo "[+] Installing Ansible collections from requirements.yml..."
 ansible-galaxy collection install -r "${PROJECT_ROOT}/collections/requirements.yml"
