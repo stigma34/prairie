@@ -10,7 +10,7 @@ prairie_base_packages:
     - wget
     - tar
   Suse:
-    - python3-PyYAML
+    - python313-PyYAML
 
 
 prairie_supported_families:
