@@ -13,6 +13,7 @@ prairie_base_packages:
 prairie_supported_families:
   - RedHat
   - Debian
+  - Suse
 
 prairie_manage_firewall: false
 
