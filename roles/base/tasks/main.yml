@@ -91,3 +91,4 @@
 
 - name: Build and configure swap
   include_tasks: swap.yml
+  when: ansible_os_family != "Suse"
