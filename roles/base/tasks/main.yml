@@ -21,6 +21,14 @@
     upgrade: dist
   when: ansible_os_family == "Debian"
 
+# SUSES: full package update via zypper
+- name: Update OS packages on SUSE family
+  dnf:
+    name: "*"
+    state: latest
+    update_only: true
+  when: ansible_os_family == "Suse"
+
 - name: Autoremove unused packages on Debian family
   apt:
     autoremove: yes
@@ -36,14 +44,14 @@
     - prairie_base_packages[ansible_os_family] | length > 0
 
 # RedHat family: manage firewalld normally
-- name: Enable and start firewalld on RedHat family
+- name: Enable and start firewalld on RedHat/Suse family
   service:
     name: firewalld
     state: started
     enabled: true
   when:
     - prairie_manage_firewall
-    - ansible_os_family == "RedHat"
+    - ansible_os_family == "RedHat" or "Suse"
 
 # Debian/Ubuntu: install ufw but do NOT auto-enable it (avoid SSH lockouts)
 - name: Ensure ufw is installed on Debian family
