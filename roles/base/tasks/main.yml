@@ -26,7 +26,6 @@
   zypper:
     name: "*"
     state: latest
-    update_only: true
   when: ansible_os_family == "Suse"
 
 - name: Autoremove unused packages on Debian family
