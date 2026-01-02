@@ -9,6 +9,9 @@ prairie_base_packages:
     - curl
     - wget
     - tar
+  Suse:
+    - python3-PyYAML
+
 
 prairie_supported_families:
   - RedHat
