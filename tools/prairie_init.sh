@@ -172,6 +172,7 @@ else
   echo "[prairie-init] Encrypting vault.yml with vault-id 'default'"
   ansible-vault encrypt \
     --vault-id default@"${VAULT_KEY}" \
+    --encrypt-vault-id default \
     "${VAULT_FILE}"
 fi
 
