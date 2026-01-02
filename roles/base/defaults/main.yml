@@ -9,6 +9,7 @@ prairie_base_packages:
     - curl
     - wget
     - tar
+    - python3-yaml
   Suse:
     - python313-PyYAML
 
