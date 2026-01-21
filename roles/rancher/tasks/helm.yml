@@ -6,10 +6,16 @@
     mode: '0755'
 
 - name: Install Helm (optionally pinned)
-  command: >
-    /opt/get_helm.sh {{ '--version ' ~ helm_version if helm_version|length > 0 else '' }}
+  environment:
+    PATH: "/usr/local/bin:{{ ansible_env.PATH | default('/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin') }}"
+  command: >-
+    /opt/get_helm.sh
+    {% if helm_version | default('') | length > 0 %}--version {{ helm_version }}{% endif %}
   register: helm_install
-  changed_when: "'Helm ' in helm_install.stdout or 'installed into' in helm_install.stdout"
+  changed_when: >
+    ('installed' in (helm_install.stdout | lower))
+    or ('installed into' in (helm_install.stdout | lower))
+    or ('downloading' in (helm_install.stdout | lower))
 
 - name: Ensure Rancher Helm repo is configured
   kubernetes.core.helm_repository:
